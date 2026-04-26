@@ -1,0 +1,55 @@
+# Secrets
+secrets.yaml
+*.secret
+*.secrets
+
+# Credentials / tokens / certs
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+google_assistant.json
+ip_bans.yaml
+known_devices.yaml
+webostv.conf
+lutron_caseta_pro_*.json
+# August integration auth (e.g. .youremail@example.com.august.conf — contains a live JWT)
+.*.conf
+
+# HA runtime state
+.storage/
+.cloud/
+.HA_VERSION
+home-assistant_v2.db*
+home-assistant.log*
+*.log
+*.log.*
+tts/
+deps/
+image/
+*.lock
+
+# Backups
+backups/
+*.bak
+*.tar
+*.tar.gz
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# HACS-managed third-party code (HACS reinstalls from source)
+custom_components/*
+!custom_components/.gitkeep
+www/community/

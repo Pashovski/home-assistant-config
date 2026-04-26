@@ -1,0 +1,480 @@
+- alias: Mailbox Notification
+  trigger:
+    platform: state
+    entity_id: binary_sensor.mailbox_contact
+    to: 'on'
+  condition:
+    condition: time
+    after: '7:00:00'
+    before: '20:00:00'
+  action:
+    service: notify.alexa_media_everywhere
+    data:
+      message: Today's Mail has arrived
+      data:
+        type: announce
+        method: tts
+- alias: Bedroom Space Heater On
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.bedroom_temperature
+    below: 68
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bedrooms_ac
+    - service: counter.increment
+      target:
+        entity_id: counter.bedroom_heater_activation_count
+- alias: Reset Bedroom Heater Counter
+  trigger:
+    platform: time
+    at: '19:00:00'
+  action:
+    - service: counter.reset
+      target:
+        entity_id: counter.bedroom_heater_activation_count
+- alias: 'Notify when August Lock Battery is Low'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.august_smart_lock_pro_3rd_gen_battery_level
+    below: 83
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'Low Battery Warning'
+        message: 'August Smart Lock battery is so critically low%. Please replace batteries.'
+- alias: 'Notify when August Lock state changes'
+  trigger:
+    - platform: state
+      entity_id: lock.august_smart_lock_pro_3rd_gen
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'August Lock State Changed'
+        message: "The August Smart Lock is now {{ states('lock.august_smart_lock_pro_3rd_gen') }}"
+- alias: 'Notify when UPS switches to battery'
+  trigger:
+    - platform: state
+      entity_id: sensor.cyberpower_status
+      to: 'OB'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'UPS On Battery'
+        message: "CyberPower UPS has switched to battery power. Input voltage: {{ states('sensor.cyberpower_input_voltage') }}V. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%. Est. runtime: {{ states('sensor.cyberpower_battery_runtime') }} seconds."
+- alias: Bedroom Space Heater Off
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.bedroom_temperature
+    above: 70
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bedrooms_ac
+- alias: Reset Dishwasher Clean Boolean
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.dishwasher_contact
+      to: 'on'
+      for: '00:00:99'
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.dishwasher_clean
+- alias: 'Dishwasher Finished'
+  trigger:
+    platform: state
+    entity_id: sensor.dishwasher_state
+    from: 'Washing'
+    to: 'Idle'
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.dishwasher_clean
+    - service: notify.alexa_media
+      data:
+        data:
+          type: announce
+        message: 'The dishes are clean.'
+        target:
+          - media_player.dining_room_echo
+          - media_player.kitchen_echo_dot
+- alias: Music Pause
+  trigger:
+    from: 'on'
+    platform: state
+    entity_id: light.nursery_sconces
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  action:
+    service: media_player.media_play_pause
+    entity_id: media_player.nursery
+- alias: Pasha Button Boolean
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/bedroom_button'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    service: input_boolean.toggle
+    entity_id: input_boolean.washer_clean
+- alias: Sylvie_Button
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/bedroom_button'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    service: switch.toggle
+    entity_id: switch.kmc_plug_2_state_2
+- alias: Sienna_Button
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/sienna_button'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.nursery_sconces_2
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.nursery_plug_3
+          - switch.nursery_plug_4
+- alias: Find_Phone_Button_Pasha
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/find_pasha_phone'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    service: script.turn_on
+    entity_id: script.find_my_phone
+- alias: Find_Phone_Button_Caitlin
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/find_caitlin_phone'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    service: script.turn_on
+    entity_id: script.find_caitlin_phone
+- alias: Pete Button Boolean
+  trigger:
+    platform: mqtt
+    topic: 'zigbee2mqtt/pete_button'
+    value_template: '{{ value_json.action }}'
+    payload: 'single'
+  action:
+    service: input_boolean.toggle
+    entity_id: input_boolean.washer_clean_pete
+- alias: 'Pete Washer Finished'
+  trigger:
+    platform: state
+    entity_id: sensor.washer_state
+    from: 'Washing'
+    to: 'Idle'
+  condition:
+    - condition: state
+      entity_id: input_boolean.washer_clean_pete
+      state: 'on'
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.washer_clean_pete
+    - service: notify.twilio
+      data:
+        message: Pete, your clothes are ready to be moved to the dryer.
+        target: +19178060920
+- alias: 'Notify on Fridge Switch State Change'
+  trigger:
+    platform: state
+    entity_id: switch.fridge
+  action:
+    service: notify.twilio
+    data:
+      message: "The fridge switch state changed to {{ states('switch.fridge') }}"
+      target: +19292503352
+- alias: 'AC State - Start'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.ac_watts
+    above: 5
+    for:
+      seconds: 4
+  condition:
+    condition: template
+    value_template: "{{ states.sensor.ac_state.state != 'Running' }}"
+  action:
+    - service: mqtt.publish
+      data:
+        topic: hass/state/ac
+        payload: 'Running'
+        retain: 'true'
+- alias: 'AC State - Idle'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.ac_watts
+    below: 5
+    for:
+      minutes: 5
+  action:
+    - service: mqtt.publish
+      data:
+        topic: hass/state/ac
+        payload: 'Idle'
+        retain: 'true'
+  id: 09b080g89675429e9f8bc1110c11b2fe
+- alias: 'Bedroom AC State - Start'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.bedroom_ac_watts
+    above: 5
+    for:
+      seconds: 4
+  condition:
+    condition: template
+    value_template: "{{ states.sensor.bedroom_ac_state.state != 'Running' }}"
+  action:
+    - service: mqtt.publish
+      data:
+        topic: hass/state/ac_bedroom
+        payload: 'Running'
+        retain: 'true'
+- alias: 'Bedroom AC State - Idle'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.bedroom_ac_watts
+    below: 5
+    for:
+      minutes: 5
+  action:
+    - service: mqtt.publish
+      data:
+        topic: hass/state/ac_bedroom
+        payload: 'Idle'
+        retain: 'true'
+  id: 09b070g89675429e9f8bc1110c11b2fe
+- alias: Kitchen Tablet Low Battery
+  id: kitchen-tablet-low-battery
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.sm_t580_battery_level
+      below: 21
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.kmc_plug_state_1
+
+- alias: Kitchen Tablet Hi Battery
+  id: kitchen-tablet-hi-battery
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.sm_t580_battery_level
+      above: 79
+  actions:
+    - action: switch.turn_off
+      target:
+        entity_id: switch.kmc_plug_state_1
+- alias: Caitlin Lamp On
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_1
+      to: '1'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bedroom_2
+- alias: Caitlin Lamp Off
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_1
+      to: '4'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bedroom_2
+- alias: Pasha Lamp On From Caitlin Pico
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_1
+      to: '8'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bedroom_1
+- alias: Pasha Lamp Off From Caitlin Pico
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_1
+      to: '16'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bedroom_1
+    - service: switch.turn_off
+      entity_id: switch.bedroom_2
+- alias: Pasha Lamp On
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_2
+      to: '1'
+  condition:
+    - condition: time
+      after: '07:00:00'
+      before: '20:00:00'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bedroom_1
+- alias: Pasha Lamp Off
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_2
+      to: '4'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bedroom_1
+    - service: light.turn_off
+      entity_id: light.master_bedroom_ceiling_fan_light
+- alias: Sienna Pico Script
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_2
+      to: '2'
+  action:
+    - service: script.turn_on
+      entity_id: script.sienna
+# - alias: Sienna Pico Script 2
+#   initial_state: true
+#   trigger:
+#   - platform: state
+#     entity_id: sensor.master_bedroom_pico_1
+#     to: '2'
+#   action:
+#   - service: script.turn_on
+#     entity_id: script.sienna
+- alias: All Lamp Off
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: sensor.master_bedroom_pico_1
+      to: '16'
+  action:
+    - service: switch.turn_off
+      entity_id: group.lamps
+    - service: light.turn_off
+      entity_id: light.master_bedroom_ceiling_fan_light
+
+- alias: 'Turn On LG TV with WakeOnLan'
+  trigger:
+    - platform: webostv.turn_on
+      entity_id: media_player.lg_webos_smart_tv # change this to the entity id of your TV
+  action:
+    - service: wake_on_lan.send_magic_packet
+      data:
+        mac: a8:23:fe:e5:45:55 # your TV's MAC address
+        broadcast_address: 192.168.15.3
+#testing 123
+##Battery Backup Automations
+- alias: 'Notify when UPS switches to battery'
+  trigger:
+    - platform: state
+      entity_id: sensor.cyberpower_status
+      to: 'OB'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'UPS On Battery'
+        message: "CyberPower UPS has switched to battery power. Input voltage: {{ states('sensor.cyberpower_input_voltage') }}V. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%. Est. runtime: {{ states('sensor.cyberpower_battery_runtime_minutes') }} min."
+- alias: 'Notify when UPS battery low'
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.cyberpower_battery_charge
+      below: 20
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'UPS Battery Low'
+        message: "CyberPower UPS battery is at {{ states('sensor.cyberpower_battery_charge') }}%. Est. runtime remaining: {{ states('sensor.cyberpower_battery_runtime_minutes') }} min. Input voltage: {{ states('sensor.cyberpower_input_voltage') }}V."
+- alias: 'Notify when input voltage drops low'
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.cyberpower_input_voltage
+      below: 100
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'UPS Input Voltage Low'
+        message: "CyberPower UPS is seeing low input voltage from ConEd: {{ states('sensor.cyberpower_input_voltage') }}V. UPS status: {{ states('sensor.cyberpower_status') }}. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%. Est. runtime: {{ states('sensor.cyberpower_battery_runtime_minutes') }} min."
+- alias: 'Notify when input voltage spikes high'
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.cyberpower_input_voltage
+      above: 130
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'UPS Input Voltage High'
+        message: "CyberPower UPS is seeing high input voltage from ConEd: {{ states('sensor.cyberpower_input_voltage') }}V. UPS status: {{ states('sensor.cyberpower_status') }}. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%."
+- alias: Block Toddlers' Nursery Light Control
+  trigger:
+    - platform: state
+      entity_id:
+        - light.nursery_sconces_2
+        - switch.nursery_plug_4
+        - switch.nursery_plug_3
+        - light.hallway_main_lights_2
+      to: 'on'
+  condition:
+    - condition: time
+      after: '20:00:00'
+      before: '06:30:00'
+  action:
+    - service: homeassistant.turn_off
+      target:
+        entity_id:
+          - light.nursery_sconces_2
+          - switch.nursery_plug_4
+          - switch.nursery_plug_3
+          - light.hallway_main_lights_2
+    - service: notify.alexa_media
+      data:
+        target:
+          - media_player.nursery
+        message: "Sorry girls, it's too early."
+        data:
+          type: announce
+          method: tts
+  mode: singles
+- alias: Tablet arrived in kitchen - connect audio
+  initial_state: true
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.kitchen1_watts
+      above: 0.5
+      for:
+        seconds: 5
+  action:
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.kitchen_echo_dot
+      data:
+        source: 'DESKTOP'
+
+- alias: Tablet left kitchen - disconnect audio
+  initial_state: true
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.kitchen1_watts
+      below: 0.5
+      for:
+        seconds: 5
+  action:
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.kitchen_echo_dot
+      data:
+        source: 'Local Speaker'

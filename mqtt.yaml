@@ -1,0 +1,726 @@
+switch:
+  - name: 'Dining Room AC'
+    state_topic: 'stat/SW_AC/POWER'
+    command_topic: 'cmnd/SW_AC/POWER'
+    availability_topic: 'tele/SW_AC/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom3'
+    state_topic: 'stat/SW_Broom2/POWER1'
+    command_topic: 'cmnd/SW_Broom2/POWER1'
+    availability_topic: 'tele/SW_Broom2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom4'
+    state_topic: 'stat/SW_Broom2/POWER2'
+    command_topic: 'cmnd/SW_Broom2/POWER2'
+    availability_topic: 'tele/SW_Broom2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1'
+    state_topic: 'stat/SW_Kitchen1/POWER1'
+    command_topic: 'cmnd/SW_Kitchen1/POWER1'
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2'
+    state_topic: 'stat/SW_Kitchen1/POWER2'
+    command_topic: 'cmnd/SW_Kitchen1/POWER2'
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen3'
+    state_topic: 'stat/SW_Kitchen2/POWER1'
+    command_topic: 'cmnd/SW_Kitchen2/POWER1'
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen4'
+    state_topic: 'stat/SW_Kitchen2/POWER2'
+    command_topic: 'cmnd/SW_Kitchen2/POWER2'
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom 1'
+    state_topic: 'stat/SW_BedRoom1/POWER1'
+    command_topic: 'cmnd/SW_BedRoom1/POWER1'
+    availability_topic: 'tele/SW_BedRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom 2'
+    state_topic: 'stat/SW_BedRoom1/POWER2'
+    command_topic: 'cmnd/SW_BedRoom1/POWER2'
+    availability_topic: 'tele/SW_BedRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom 3'
+    state_topic: 'stat/SW_BedRoom1/POWER3'
+    command_topic: 'cmnd/SW_BedRoom1/POWER3'
+    availability_topic: 'tele/SW_BedRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom 4'
+    state_topic: 'stat/SW_BedRoom1/POWER4'
+    command_topic: 'cmnd/SW_BedRoom1/POWER4'
+    availability_topic: 'tele/SW_BedRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Living Room 1'
+    state_topic: 'stat/SW_LRoom1/POWER1'
+    command_topic: 'cmnd/SW_LRoom1/POWER1'
+    availability_topic: 'tele/SW_LRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Living Room 2'
+    state_topic: 'stat/SW_LRoom1/POWER2'
+    command_topic: 'cmnd/SW_LRoom1/POWER2'
+    availability_topic: 'tele/SW_LRoom1/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Living Room 3'
+    state_topic: 'stat/SW_LRoom2/POWER1'
+    command_topic: 'cmnd/SW_LRoom2/POWER1'
+    availability_topic: 'tele/SW_LRoom2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Living Room 4'
+    state_topic: 'stat/SW_LRoom2/POWER2'
+    command_topic: 'cmnd/SW_LRoom2/POWER2'
+    availability_topic: 'tele/SW_LRoom2/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge'
+    state_topic: 'stat/SW_Fridge/POWER'
+    command_topic: 'cmnd/SW_Fridge/POWER'
+    availability_topic: 'tele/SW_Fridge/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedrooms_AC'
+    state_topic: 'stat/SW_AC_Bedroom/POWER'
+    command_topic: 'cmnd/SW_AC_Bedroom/POWER'
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug State 1'
+    state_topic: 'stat/SW_Multi_Monitoring_1/POWER1'
+    command_topic: 'cmnd/SW_Multi_Monitoring_1/POWER1'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug State 2'
+    state_topic: 'stat/SW_Multi_Monitoring_1/POWER2'
+    command_topic: 'cmnd/SW_Multi_Monitoring_1/POWER2'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug State 3'
+    state_topic: 'stat/SW_Multi_Monitoring_1/POWER3'
+    command_topic: 'cmnd/SW_Multi_Monitoring_1/POWER3'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug 2 State 1'
+    state_topic: 'stat/SW_Multi_Monitoring_2/POWER1'
+    command_topic: 'cmnd/SW_Multi_Monitoring_2/POWER1'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug 2 State 2'
+    state_topic: 'stat/SW_Multi_Monitoring_2/POWER2'
+    command_topic: 'cmnd/SW_Multi_Monitoring_2/POWER2'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'KMC Plug 2 State 3'
+    state_topic: 'stat/SW_Multi_Monitoring_2/POWER3'
+    command_topic: 'cmnd/SW_Multi_Monitoring_2/POWER3'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_Multi_Monitoring_2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Nursery Plug 1'
+    state_topic: 'stat/SW_MULTI_1/POWER1'
+    command_topic: 'cmnd/SW_MULTI_1/POWER1'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_MULTI_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Nursery Plug 2'
+    state_topic: 'stat/SW_MULTI_1/POWER2'
+    command_topic: 'cmnd/SW_MULTI_1/POWER2'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_MULTI_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Nursery Plug 3'
+    state_topic: 'stat/SW_MULTI_1/POWER3'
+    command_topic: 'cmnd/SW_MULTI_1/POWER3'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_MULTI_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Nursery Plug 4'
+    state_topic: 'stat/SW_MULTI_1/POWER4'
+    command_topic: 'cmnd/SW_MULTI_1/POWER4'
+    qos: 1
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    availability_topic: 'tele/SW_MULTI_1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+
+sensor:
+  - name: 'Kitchen1 Watts'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1 Voltage'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1 Amps'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1 Energy Today'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1 Energy Yesterday'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen1 Signal'
+    state_topic: 'tele/SW_Kitchen1/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_Kitchen1/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Watts'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Voltage'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Amps'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Energy Today'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Energy Yesterday'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Kitchen2 Signal'
+    state_topic: 'tele/SW_Kitchen2/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', 'Default RSSI Value') }}"
+    availability_topic: 'tele/SW_Kitchen2/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Watts'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Broom2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Voltage'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Broom2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Amps'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Broom2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Energy Today'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Broom2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Energy Yesterday'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Broom2/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bathroom2 Signal'
+    state_topic: 'tele/SW_Broom2/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_Broom2/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC State'
+    state_topic: 'hass/state/ac'
+    icon: mdi:air-conditioner
+  - name: 'AC Watts'
+    state_topic: 'tele/SW_AC/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC Voltage'
+    state_topic: 'tele/SW_AC/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC Amps'
+    state_topic: 'tele/SW_AC/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC Energy Today'
+    state_topic: 'tele/SW_AC/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_AC/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC Yesterday'
+    state_topic: 'tele/SW_AC/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_AC/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'AC Signal'
+    state_topic: 'tele/SW_AC/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_AC/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC State'
+    state_topic: 'hass/state/ac_bedroom'
+    icon: mdi:air-conditioner
+  - name: 'Bedroom AC Watts'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC Voltage'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC Amps'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC Energy Today'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC Yesterday'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Bedroom AC Signal'
+    state_topic: 'tele/SW_AC_Bedroom/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_AC_Bedroom/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven State'
+    state_topic: 'hass/state/Oven'
+    icon: mdi:air-conditioner
+  - name: 'Oven Watts'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Oven/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven Voltage'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Oven/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven Amps'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Oven/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven Energy Today'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Oven/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven Yesterday'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Oven/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Oven Signal'
+    state_topic: 'tele/SW_Oven/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_Oven/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge State'
+    state_topic: 'hass/state/Fridge'
+    icon: mdi:air-conditioner
+  - name: 'Fridge Watts'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Fridge/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge Voltage'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Fridge/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge Amps'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Fridge/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge Energy Today'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Fridge/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge Yesterday'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Fridge/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Fridge Signal'
+    state_topic: 'tele/SW_Fridge/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', 'Default RSSI Value') }}"
+    availability_topic: 'tele/SW_Fridge/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher State'
+    state_topic: 'hass/state/Dishwasher'
+    icon: mdi:dishwasher
+  - name: 'Dishwasher Watts'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher Voltage'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher Amps'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher Energy Today'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher Yesterday'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Dishwasher Signal'
+    state_topic: 'tele/SW_Dishwasher/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_Dishwasher/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer State'
+    state_topic: 'hass/state/washer'
+    icon: mdi:washing-machine
+  - name: 'Washer Watts'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    value_template: "{{value_json['ENERGY'].Power }}"
+    qos: 2
+    unit_of_measurement: 'W'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Washer/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer Voltage'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+    qos: 2
+    unit_of_measurement: 'V'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Washer/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer Amps'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    value_template: "{{value_json['ENERGY'].Current }}"
+    qos: 2
+    unit_of_measurement: 'A'
+    icon: mdi:flash-circle
+    availability_topic: 'tele/SW_Washer/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer Energy Today'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    value_template: "{{value_json['ENERGY'].Today }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Washer/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer Yesterday'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    value_template: "{{value_json['ENERGY'].Yesterday }}"
+    qos: 2
+    unit_of_measurement: 'kWh'
+    availability_topic: 'tele/SW_Washer/LWT'
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: 'Washer Signal'
+    state_topic: 'tele/SW_Washer/SENSOR'
+    unit_of_measurement: '%'
+    value_template: "{{ value_json.get('Wifi', {}).get('RSSI', -100) }}"
+    availability_topic: 'tele/SW_Washer/LWT'
+    qos: 1
+    payload_available: 'Online'
+    payload_not_available: 'Offline'
+  - name: Bridge state
+    state_topic: 'zigbee2mqtt/bridge/state'
+    icon: mdi:router-wireless

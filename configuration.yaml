@@ -1,0 +1,450 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+homeassistant:
+  country: US
+  name: Home
+  unit_system: imperial
+  customize: !include customize.yaml
+  # external_url: !secret external_url
+  # auth_mfa_modules:
+  #   - type: totp
+  # auth_providers:
+  #   - type: trusted_networks
+  #     trusted_networks:
+  #       - 192.168.1.224
+  #       - 192.168.1.227
+group: !include groups.yaml
+automation: !include automations.yaml
+automation man: !include automations-man.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+mqtt: !include mqtt.yaml
+cloud: !include cloud.yaml
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+input_number:
+  ac_temperature:
+    name: AC Temperature
+    initial: 64
+    min: 60
+    max: 80
+    step: 1
+
+input_boolean:
+  ac_virtual_switch:
+    name: AC Virtual Switch
+    initial: off
+
+input_boolean:
+  bedroom_ac_virtual_switch:
+    name: Bedroom AC Virtual Switch
+    initial: off
+
+input_boolean:
+  nursery_light_blocker:
+    name: Nursery Light Blocker
+    initial: off
+
+counter:
+  bedroom_heater_activation_count:
+    name: Bedroom Heater Activation Count
+    initial: 0
+    step: 1
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.22.0.3
+    - 172.21.0.5
+    - 172.18.0.2
+    - 172.19.0.6
+    - 172.18.0.6
+    - 172.20.0.7
+    - 172.20.0.4
+    - 172.29.0.4
+    - 172.18.0.7
+    - 172.18.0.3
+    - !secret external_proxy_ip
+
+# homeassistant:
+#   external_url: !secret external_url
+#   auth_mfa_modules:
+#     - type: totp
+#   auth_providers:
+#     - type: trusted_networks
+#       trusted_networks:
+#         - 192.168.1.224
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+# Example configuration.yaml entry
+# spotify:
+#   client_id: !secret spotify_client_id
+#   client_secret: !secret spotify_client_secret
+# binary_sensor:
+#   - platform: wyzesense
+#     device: auto
+# Example configuration.yaml entry
+wake_on_lan:
+
+# Example configuration.yaml entry
+# webostv:
+#   host: 192.168.15.15
+#   name: 'Living Room TV'
+#   turn_on_action:
+#     service: wake_on_lan.send_magic_packet
+#     data:
+#       mac: "a8:23:fe:e5:45:55"
+#       broadcast_address: 192.168.15.3
+#   customize:
+#     sources:
+#         - livetv
+#         - youtube
+#         - makotv
+#         - netflix
+#         - Amazon Prime Video
+#         - hulu
+#         - HDMI
+# Example configuration.yaml entry
+
+sensor:
+  # - platform: pushbullet
+  #   api_key: !secret pushbullet_api_key
+  #   monitored_conditions:
+  #     - body
+
+template:
+  - sensor:
+      - name: "Last Alexa"
+        state: >
+          {% set echos = expand('group.echos') | selectattr('attributes.last_called', 'eq', True) | list %}
+          {{ echos | map(attribute='entity_id') | first if echos else 'none' }}
+      - name: "CyberPower Battery Runtime Minutes"
+        unit_of_measurement: "min"
+        state: "{{ (states('sensor.cyberpower_battery_runtime') | int / 60) | round(1) }}"
+        icon: mdi:timer
+  - switch:
+      - name: kitchen_nanit
+        state: "{{ is_state('input_boolean.kitchen_nanit_state', 'on') }}"
+        turn_on:
+          - action: script.kitchen_nanit_on
+        turn_off:
+          - action: script.kitchen_nanit_off
+
+      - name: door
+        state: "{{ is_state('input_boolean.door_state', 'on') }}"
+        turn_on:
+          - action: script.door_on
+        turn_off:
+          - action: script.kitchen_nanit_off
+
+      - name: kitchen_door
+        state: "{{ is_state('input_boolean.kitchen_door_state', 'on') }}"
+        turn_on:
+          - action: script.kitchen_door_on
+        turn_off:
+          - action: script.kitchen_nanit_off
+
+      - name: Powder
+        state: "{{ is_state('script.powder', 'on') }}"
+        turn_on:
+          - action: script.turn_on
+            target:
+              entity_id: script.powder
+        turn_off:
+          - action: script.turn_off
+            target:
+              entity_id: script.powder
+
+  # - platform: systemmonitor
+  #   resources:
+  #     - type: disk_use_percent
+  #       arg: /home
+  #     - type: memory_free
+  #     - type: processor_use
+
+notify:
+  # - name: pusbullet
+  #   platform: pushbullet
+  #   api_key: !secret pushbullet_api_key
+  # - name: pushbullet_caitlin
+  #   platform: pushbullet
+  #   api_key: !secret pushbullet_caitlin_api_key
+  - platform: joaoapps_join
+    api_key: !secret join_api_key
+    device_id: !secret join_device_id_computer
+    name: Computer
+  - name: twilio
+    platform: twilio_sms
+    from_number: !secret twilio_from_number
+# Example configuration.yaml entry
+light:
+  - platform: group
+    name: Entryway Light
+    entities:
+      - light.0x0017880106c01547
+      - light.0x00178801089e29fe
+  - platform: group
+    name: Bathroom Lights
+    entities:
+      - light.main_bathroom_main_lights_2
+      - light.main_bathroom_sconces_2
+  - platform: group
+    name: Dining Room Lights
+    entities:
+      - light.dining_room_cove_lights_2
+      - light.dining_room_main_lights_2
+      - light.dining_room_chandelier_2
+
+# Example configuration.yaml entry
+frontend:
+  themes: !include_dir_merge_named themes
+
+# climate:
+#   - platform: generic_thermostat
+#     name: Nursery Heater
+#     heater: switch.living_room_1
+#     target_sensor: sensor.nursery_temperature
+#     min_temp: 60
+#     max_temp: 80
+#     ac_mode: false
+#     target_temp: 69
+#     cold_tolerance: 1.0
+#     hot_tolerance: 1.0
+#     initial_hvac_mode: "heat"
+
+switch:
+  # - platform: template
+  #   switches:
+  #     denon_heos_music:
+  #       friendly_name: Denon HEOS Music
+  #       value_template: >
+  #         {{ is_state_attr('media_player.denon_avr_x1500h', 'source', 'HEOS Music') }}
+  #       turn_on:
+  #         service: media_player.select_source
+  #         data:
+  #           entity_id: media_player.denon_avr_x1500h
+  #           source: 'HEOS Music'
+  #       turn_off:
+  #         service: media_player.turn_off
+  #         entity_id: media_player.denon_avr_x1500h
+  # - platform: template
+  #   switches:
+  #     netflix:
+  #       friendly_name: Netflix
+  #       value_template: >
+  #         {{ is_state_attr('media_player.living_room_tv', 'source', 'Netflix') }}
+  #       turn_on:
+  #         - service: media_player.turn_on
+  #           entity_id: media_player.living_room_tv
+  #         - delay: 00:00:30
+  #         - service: media_player.select_source
+  #           data:
+  #             entity_id: media_player.living_room_tv
+  #             source: 'Netflix'
+  #         - delay: 00:00:32
+  #         - service: webostv.button
+  #           data:
+  #             entity_id: media_player.living_room_tv
+  #             button: ENTER
+  #       turn_off:
+  #         service: media_player.turn_off
+  #         entity_id: media_player.living_room_tv
+  # - platform: template
+  #   switches:
+  #     kodi:
+  #       friendly_name: Kodi
+  #       value_template: >
+  #         {{ is_state_attr('media_player.living_room_tv', 'source', 'HDMI 2') }}
+  #       turn_on:
+  #         - service: media_player.turn_on
+  #           entity_id: media_player.living_room_tv
+  #         - delay: 00:00:08
+  #         - service: media_player.select_source
+  #           data:
+  #             entity_id: media_player.living_room_tv
+  #             source: 'HDMI 2'
+  #         - delay: 00:00:10
+  #         - service: media_player.select_source
+  #           data:
+  #             entity_id: media_player.denon_avr_x1500h
+  #             source: 'Media Player'
+  #       turn_off:
+  #         service: media_player.turn_off
+  #         entity_id: media_player.living_room_tv
+  # - platform: template
+  #   switches:
+  #     youtube:
+  #       friendly_name: YouTube
+  #       value_template: >
+  #         {{ is_state_attr('media_player.living_room_tv', 'source', 'YouTube') }}
+  #       turn_on:
+  #         - service: media_player.turn_on
+  #           entity_id: media_player.living_room_tv
+  #         - delay: 00:00:08
+  #         - service: media_player.select_source
+  #           data:
+  #             entity_id: media_player.living_room_tv
+  #             source: 'YouTube'
+  #       turn_off:
+  #         service: media_player.turn_off
+  #         entity_id: media_player.living_room_tv
+  # - platform: template
+  #   switches:
+  #     nanit:
+  #       value_template: "{{ is_state('input_boolean.nanit_state', 'on') }}"
+  #       turn_on:
+  #         service: script.nanit_on
+  #       turn_off:
+  #         service: script.nanit_off
+# template:
+  # - platform: template
+  #   switches:
+  #     ac_switch:
+  #       value_template: "{{ is_state('input_boolean.ac_virtual_switch', 'on') }}"
+  #       turn_on:
+  #         service: script.toggle_ac
+  #       turn_off:
+  #         service: script.toggle_ac
+
+  # - platform: template
+  #   switches:
+  #     bedroom_ac_switch:
+  #       value_template: "{{ is_state('input_boolean.bedroom_ac_virtual_switch', 'on') }}"
+  #       turn_on:
+  #         service: script.toggle_bedroom_ac
+  #       turn_off:
+  #         service: script.toggle_bedroom_ac
+
+  - platform: wake_on_lan
+    name: 'LG TV'
+    mac: 'a8:23:fe:e5:45:55'
+    broadcast_address: 192.168.15.255
+    host: 192.168.15.90
+
+  # - platform: switchbot
+  #   mac: c9:63:93:c1:e3:d3
+
+  # - platform: broadlink
+  #host: 192.168.15.22#
+  # mac: 24:df:a7:e0:02:48 
+  - platform: wake_on_lan
+    name: 'computer'
+    mac: c8:5b:76:34:f0:ce
+    host: 192.168.1.252
+    turn_off:
+      service: script.pc_off
+  - platform: wake_on_lan
+    name: 'Lenovo'
+    mac: 00:23:24:bf:67:2e
+    host: 192.168.1.224
+    turn_off:
+      service: script.lenovo_off
+  - platform: wake_on_lan
+    name: 'Dell'
+    mac: 00-E0-4C-36-01-2D
+    host: 192.168.1.53
+    turn_off:
+      service: script.dell_off
+lutron_caseta:
+  - host: 192.168.15.19
+    keyfile: lutron_caseta-192.168.15.19-key.pem
+    certfile: lutron_caseta-192.168.15.19-cert.pem
+    ca_certs: lutron_caseta-192.168.15.19-ca.pem
+
+# lutron_caseta_pro:
+#     bridges:
+#       - host: 192.168.15.19
+#         mac: 60:64:05:3F:FE:20
+
+# tplink:
+#   discovery: false
+#   strip:
+#     - host: 192.168.15.6
+# This will have to be your mqtt broker, Mosquitto addon is recommended.
+# input_boolean:
+#   zigbee_permit_join:
+#     name: Allow devices to join
+#     initial: off
+#     icon: mdi:cellphone-wireless
+timer:
+  zigbee_permit_join:
+    name: Time remaining
+    duration: 600 # Updated this to the number of seconds you wish
+# Example configuration.yaml entry with include
+#influxdb##
+influxdb:
+  api_version: 2
+  ssl: false
+  host: 192.168.1.230
+  port: 8086
+  token: !secret influxdb_token
+  organization: docker
+  bucket: home_assistant
+  tags:
+    source: HA
+  tags_attributes:
+    - friendly_name
+  default_measurement: units
+  include:
+    domains:
+      - sensor
+##recorder##
+recorder:
+  include:
+    entities:
+      - sensor.oven_state
+
+logger:
+  default: info
+
+joaoapps_join:
+  - name: Computer
+    device_id: !secret join_device_id_computer
+    api_key: !secret join_api_key
+  - name: Lenovo
+    device_id: !secret join_device_id_lenovo
+    api_key: !secret join_api_key
+  - name: Dell
+    device_id: !secret join_device_id_dell
+    api_key: !secret join_api_key
+
+input_text:
+  alexa_actionable_notification:
+    name: Alexa Actionable Notification Holder
+    max: 255
+    initial: '{"text": "This is a test of the alexa actions custom skill. Did it work?", "event": "actionable.skill.test"}'
+
+rest_command:
+  autoremote_garage_open:
+    url: !secret autoremote_garage_open_url
+  autoremote_open_nanit:
+    url: !secret autoremote_open_nanit_url
+  autoremote_close_nanit:
+    url: !secret autoremote_close_nanit_url
+  autoremote_kitchen_garage_open:
+    url: !secret autoremote_kitchen_garage_open_url
+  autoremote_kitchen_open_nanit:
+    url: !secret autoremote_kitchen_open_nanit_url
+  autoremote_kitchen_close_nanit:
+    url: !secret autoremote_kitchen_close_nanit_url
+  autoremote_open_front_door:
+    url: !secret autoremote_open_front_door_url
+  autoremote_kitchen_open_front_door:
+    url: !secret autoremote_kitchen_open_front_door_url
+  autoremote_find_my_phone:
+    url: !secret autoremote_find_my_phone_url
+  autoremote_find_caitlin_phone:
+    url: !secret autoremote_find_caitlin_phone_url
+  fast_api_idling:
+    url: 'http://192.168.1.230:8000/send-status/idle'
+  fast_api_washing:
+    url: 'http://192.168.1.230:8000/send-status/washing'
+  fast_api_ooo:
+    url: 'http://192.168.1.230:8000/send-status/outoforder'
+twilio:
+  account_sid: !secret twilio_account_sid
+  auth_token: !secret twilio_auth_token

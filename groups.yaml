@@ -1,0 +1,26 @@
+family:
+  name: Family
+  entities:
+    - person.caitlin
+    - person.pasha
+echos:
+  name: Echomania
+  entities:
+    - media_player.dining_room_echo
+    - media_player.paul_s_4th_echo_dot
+    - media_player.kitchen_echo_dot
+lamps:
+  name: Lamps
+  entities:
+    - switch.bedroom_2
+    - switch.bedroom_1
+    - switch.kmc_plug_2_state_2
+blinds:
+  name: Blinds
+  entities:
+    - cover.master_bedroom_blind_1
+    - cover.master_bedroom_blinds_2
+    - cover.master_bedroom_blinds_3
+
+
+    
