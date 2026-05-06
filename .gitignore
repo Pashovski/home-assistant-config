@@ -53,3 +53,4 @@ __pycache__/
 custom_components/*
 !custom_components/.gitkeep
 www/community/
+.cache/

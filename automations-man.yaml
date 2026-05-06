@@ -79,23 +79,38 @@
   action:
     - service: input_boolean.turn_off
       entity_id: input_boolean.dishwasher_clean
-- alias: 'Dishwasher Finished'
+- alias: Dishwasher Finished
   trigger:
     platform: state
     entity_id: sensor.dishwasher_state
-    from: 'Washing'
-    to: 'Idle'
-  action:
-    - service: input_boolean.turn_on
+    from: Washing
+    to: Idle
+  condition:
+    - condition: state
       entity_id: input_boolean.dishwasher_clean
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.dishwasher_clean
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.dishwasher_ready_to_unload
     - service: notify.alexa_media
       data:
         data:
           type: announce
-        message: 'The dishes are clean.'
+        message: "The dishes are clean."
         target:
           - media_player.dining_room_echo
           - media_player.kitchen_echo_dot
+- alias: Clear Dishwasher Ready When Next Cycle Starts
+  trigger:
+    platform: state
+    entity_id: sensor.dishwasher_state
+    from: Idle
+    to: Washing
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.dishwasher_ready_to_unload
 - alias: Music Pause
   trigger:
     from: 'on'
@@ -109,6 +124,54 @@
   action:
     service: media_player.media_play_pause
     entity_id: media_player.nursery
+- alias: Reset Laundry Owner On New Wash
+  trigger:
+    platform: state
+    entity_id: sensor.washer_state
+    from: Idle
+    to: Washing
+  condition:
+    - condition: state
+      entity_id: input_boolean.washer_clean
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.washer_clean_pete
+      state: "off"
+  action:
+    - service: input_text.set_value
+      data:
+        entity_id: input_text.laundry_owner
+        value: ""
+- alias: Clear Laundry Ready When Next Wash Starts
+  trigger:
+    platform: state
+    entity_id: sensor.washer_state
+    from: Idle
+    to: Washing
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.laundry_ready_to_move
+- alias: Pasha Boolean Armed (Any Source)
+  trigger:
+    platform: state
+    entity_id: input_boolean.washer_clean
+    to: "on"
+  action:
+    - service: input_text.set_value
+      data:
+        entity_id: input_text.laundry_owner
+        value: Pasha
+
+- alias: Pete Boolean Armed (Any Source)
+  trigger:
+    platform: state
+    entity_id: input_boolean.washer_clean_pete
+    to: "on"
+  action:
+    - service: input_text.set_value
+      data:
+        entity_id: input_text.laundry_owner
+        value: Pete
 - alias: Pasha Button Boolean
   trigger:
     platform: mqtt
@@ -116,8 +179,12 @@
     value_template: '{{ value_json.action }}'
     payload: 'single'
   action:
-    service: input_boolean.toggle
-    entity_id: input_boolean.washer_clean
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.washer_clean
+    - service: input_text.set_value
+      data:
+        entity_id: input_text.laundry_owner
+        value: Pasha
 - alias: Sylvie_Button
   trigger:
     platform: mqtt
@@ -167,8 +234,12 @@
     value_template: '{{ value_json.action }}'
     payload: 'single'
   action:
-    service: input_boolean.toggle
-    entity_id: input_boolean.washer_clean_pete
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.washer_clean_pete
+    - service: input_text.set_value
+      data:
+        entity_id: input_text.laundry_owner
+        value: Pete
 - alias: 'Pete Washer Finished'
   trigger:
     platform: state
@@ -182,6 +253,8 @@
   action:
     - service: input_boolean.turn_off
       entity_id: input_boolean.washer_clean_pete
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.laundry_ready_to_move
     - service: notify.twilio
       data:
         message: Pete, your clothes are ready to be moved to the dryer.

@@ -419,6 +419,8 @@
   action:
   - service: input_boolean.turn_off
     entity_id: input_boolean.washer_clean
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.laundry_ready_to_move
   - service: notify.alexa_media_everywhere
     data:
       message: The clothes are ready to be moved to the dryer
