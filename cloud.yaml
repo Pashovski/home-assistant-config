@@ -275,7 +275,7 @@ alexa:
     #   name: Blinds
     #   description: The bilnds in the master bedroom
     #   display_categories: OTHER
-    switch.ac_switch:
+    switch.ac:
       name: AC
       description: The virtual switch for the Dining Room AC
       display_categories: SWITCH

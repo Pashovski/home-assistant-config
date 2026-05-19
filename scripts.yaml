@@ -433,28 +433,6 @@ power:
         device: bedroom_ac
         command: power
 
-powder:
-  sequence:
-    - service: remote.send_command
-      target:
-        entity_id: remote.broadlink_main_remote
-      data:
-        device: ac_main
-        command: power
-
-toggle_ac:
-  alias: Toggle AC
-  sequence:
-    - service: remote.send_command
-      target:
-        entity_id: remote.broadlink_main_remote
-      data:
-        device: ac_main
-        command: power
-    - service: input_boolean.toggle
-      target:
-        entity_id: input_boolean.ac_virtual_switch
-
 toggle_bedroom_ac:
   alias: Toggle Bedroom AC
   sequence:
@@ -467,15 +445,6 @@ toggle_bedroom_ac:
     - service: input_boolean.toggle
       target:
         entity_id: input_boolean.bedroom_ac_virtual_switch
-
-powerz:
-  sequence:
-    - service: remote.send_command
-      target:
-        device_id: d3247420c00a0f9bbd3ac455b917d40f
-      data:
-        device: ac_main
-        command: power
 
 bedroom_ac_temp_up:
   sequence:
