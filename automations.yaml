@@ -600,18 +600,3 @@
     target:
       entity_id: switch.bedroom_1
   mode: single
-- id: ac_virtual_switch_send_power
-  alias: AC Virtual Switch - Send Power
-  description: Send the broadlink power command whenever the AC virtual switch toggles.
-  trigger:
-  - platform: state
-    entity_id: input_boolean.ac_virtual_switch
-  condition: []
-  action:
-  - service: remote.send_command
-    target:
-      entity_id: remote.broadlink_main_remote
-    data:
-      device: ac_main
-      command: power
-  mode: single

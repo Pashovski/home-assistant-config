@@ -32,9 +32,6 @@ input_number:
     step: 1
 
 input_boolean:
-  ac_virtual_switch:
-    name: AC Virtual Switch
-    initial: off
   bedroom_ac_virtual_switch:
     name: Bedroom AC Virtual Switch
     initial: off
@@ -146,15 +143,25 @@ template:
 
       - name: AC
         unique_id: ac_switch
-        state: "{{ is_state('input_boolean.ac_virtual_switch', 'on') }}"
+        state: "{{ is_state('sensor.ac_state', 'Running') }}"
         turn_on:
-          - action: input_boolean.turn_on
+          - condition: template
+            value_template: "{{ not is_state('sensor.ac_state', 'Running') }}"
+          - action: remote.send_command
             target:
-              entity_id: input_boolean.ac_virtual_switch
+              entity_id: remote.broadlink_main_remote
+            data:
+              device: ac_main
+              command: power
         turn_off:
-          - action: input_boolean.turn_off
+          - condition: template
+            value_template: "{{ is_state('sensor.ac_state', 'Running') }}"
+          - action: remote.send_command
             target:
-              entity_id: input_boolean.ac_virtual_switch
+              entity_id: remote.broadlink_main_remote
+            data:
+              device: ac_main
+              command: power
 
   # - platform: systemmonitor
   #   resources:

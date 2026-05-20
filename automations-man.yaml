@@ -290,7 +290,7 @@
     entity_id: sensor.ac_watts
     below: 5
     for:
-      minutes: 5
+      seconds: 60
   action:
     - service: mqtt.publish
       data:
