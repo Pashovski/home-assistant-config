@@ -26,11 +26,12 @@ alexa:
       - switch.nanit
       - group.lamps
       # - group.blinds
-      - cover.master_bedroom_blind_1
+      - cover.master_bedroom_blind_1_ac_safe
       - cover.master_bedroom_blinds_2
       - cover.master_bedroom_blinds_3
     exclude_entities:
       - group.blinds
+      - cover.master_bedroom_blind_1
       - light.0x0017880106c01547_light
       - light.0x00178801089e29fe_light
       - light.0x00124b00210f64bc_light
@@ -132,7 +133,7 @@ alexa:
       - lock
       - cover
   entity_config:
-    cover.master_bedroom_blind_1:
+    cover.master_bedroom_blind_1_ac_safe:
       name: Master Bedroom Blind 1
       description: Left window blind in the master bedroom
       display_categories: INTERIOR_BLIND
