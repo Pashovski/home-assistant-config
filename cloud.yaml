@@ -188,7 +188,7 @@ alexa:
       name: Entryway
       description: The Entryway light
       display_categories: LIGHT
-    light.living_room_lamp:
+    light.0xa4c1389088707aab:
       name: Living Room Lamp
       description: The Lamp in the Living Room
       display_categories: LIGHT
