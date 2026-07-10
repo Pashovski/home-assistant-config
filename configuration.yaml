@@ -145,41 +145,40 @@ template:
               device: ac_main
               command: power
 
+  - cover:
+      - name: "Master Bedroom Blind 1 (AC Safe)"
+        unique_id: master_bedroom_blind_1_ac_safe
+        device_class: shade
+        position: >
+          {{ state_attr('cover.master_bedroom_blind_1', 'current_position') | int(0) }}
+        availability: "{{ has_value('cover.master_bedroom_blind_1') }}"
+        open_cover:
+          - action: cover.open_cover
+            target:
+              entity_id: cover.master_bedroom_blind_1
+        close_cover:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.master_bedroom_blind_1
+            data:
+              position: 20
+        set_cover_position:
+          - action: cover.set_cover_position
+            target:
+              entity_id: cover.master_bedroom_blind_1
+            data:
+              position: "{{ position }}"
+        stop_cover:
+          - action: cover.stop_cover
+            target:
+              entity_id: cover.master_bedroom_blind_1
+
   # - platform: systemmonitor
   #   resources:
   #     - type: disk_use_percent
   #       arg: /home
   #     - type: memory_free
   #     - type: processor_use
-
-cover:
-  - platform: template
-    covers:
-      master_bedroom_blind_1_ac_safe:
-        friendly_name: "Master Bedroom Blind 1 (AC Safe)"
-        device_class: shade
-        position_template: >
-          {{ state_attr('cover.master_bedroom_blind_1', 'current_position') | int(0) }}
-        open_cover:
-          service: cover.open_cover
-          target:
-            entity_id: cover.master_bedroom_blind_1
-        close_cover:
-          service: cover.set_cover_position
-          target:
-            entity_id: cover.master_bedroom_blind_1
-          data:
-            position: 20
-        set_cover_position:
-          service: cover.set_cover_position
-          target:
-            entity_id: cover.master_bedroom_blind_1
-          data:
-            position: "{{ position }}"
-        stop_cover:
-          service: cover.stop_cover
-          target:
-            entity_id: cover.master_bedroom_blind_1
 
 notify:
   # - name: pusbullet
