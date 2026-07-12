@@ -123,6 +123,20 @@ template:
         turn_off:
           - action: script.kitchen_nanit_off
 
+      # Alexa PIN bypass: locks require a 4-digit voice code to unlock, switches don't.
+      # Exposed to Alexa as "Deadbolt" via cloud.yaml. ON = locked, OFF = unlocked.
+      - name: front_door_bolt
+        unique_id: front_door_bolt
+        state: "{{ is_state('lock.august_smart_lock_pro_3rd_gen', 'locked') }}"
+        turn_on:
+          - action: lock.lock
+            target:
+              entity_id: lock.august_smart_lock_pro_3rd_gen
+        turn_off:
+          - action: lock.unlock
+            target:
+              entity_id: lock.august_smart_lock_pro_3rd_gen
+
       - name: AC
         unique_id: ac_switch
         state: "{{ is_state('sensor.ac_state', 'Running') }}"

@@ -13,6 +13,7 @@ alexa:
       - light.living_room
       - light.entryway_light
       - lock.august_smart_lock_pro_3rd_gen
+      - switch.front_door_bolt
       - media_player.denon_avr_x1500h
       - media_player.libreelec
       - sensor.nursery_temperature
@@ -196,6 +197,10 @@ alexa:
       name: Front Door
       description: The august smart lock for the apartment
       display_categories: LOCK
+    switch.front_door_bolt:
+      name: Deadbolt
+      description: The front door lock as a switch - on locks, off unlocks (no Alexa PIN)
+      display_categories: SWITCH
     switch.bedroom_1:
       name: Pasha's Lamp
       description: The lamp by Pasha
