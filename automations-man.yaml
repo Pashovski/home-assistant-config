@@ -298,6 +298,28 @@
         payload: 'Idle'
         retain: 'true'
   id: 09b080g89675429e9f8bc1110c11b2fe
+- alias: 'Notify when AC turns on'
+  trigger:
+    - platform: state
+      entity_id: sensor.ac_state
+      from: 'Idle'
+      to: 'Running'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'AC'
+        message: 'The AC is on'
+- alias: 'Notify when AC turns off'
+  trigger:
+    - platform: state
+      entity_id: sensor.ac_state
+      from: 'Running'
+      to: 'Idle'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'AC'
+        message: 'The AC is off'
 - alias: 'Bedroom AC State - Start'
   trigger:
     platform: numeric_state

@@ -39,7 +39,7 @@
       button_type: 'on'
   action:
   - service: light.turn_on
-    entity_id: light.living_room_lamp
+    entity_id: light.0xa4c1389088707aab
   id: afba786326554188b968db8633c298d6
 - alias: Front Foyer Pico 2 Favorite
   trigger:
@@ -63,7 +63,7 @@
   - service: light.turn_off
     entity_id:
     - light.living_room
-    - light.living_room_lamp
+    - light.0xa4c1389088707aab
   id: cbfa9d06009f4b289860e429a1408544
 - alias: Master Bedroom Pico 1 Off
   trigger:
@@ -451,7 +451,7 @@
   action:
   - service: light.turn_off
     target:
-      entity_id: light.living_room_lamp
+      entity_id: light.0xa4c1389088707aab
   mode: single
 - id: '1673066807843'
   alias: Washer_Idling
