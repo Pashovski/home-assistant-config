@@ -320,11 +320,13 @@
       data:
         title: 'AC'
         message: 'The AC is off'
+# Bedroom AC is on KMC Plug 2 outlet 3; the meter is whole-strip (lamp ~35W,
+# AC compressor ~1400W), so thresholds sit between the two.
 - alias: 'Bedroom AC State - Start'
   trigger:
     platform: numeric_state
-    entity_id: sensor.bedroom_ac_watts
-    above: 5
+    entity_id: sensor.kmc_plug_2_watts
+    above: 150
     for:
       seconds: 4
   condition:
@@ -339,8 +341,8 @@
 - alias: 'Bedroom AC State - Idle'
   trigger:
     platform: numeric_state
-    entity_id: sensor.bedroom_ac_watts
-    below: 5
+    entity_id: sensor.kmc_plug_2_watts
+    below: 60
     for:
       minutes: 5
   action:
@@ -350,6 +352,28 @@
         payload: 'Idle'
         retain: 'true'
   id: 09b070g89675429e9f8bc1110c11b2fe
+- alias: 'Notify when Bedroom AC turns on'
+  trigger:
+    - platform: state
+      entity_id: sensor.bedroom_ac_state
+      from: 'Idle'
+      to: 'Running'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'Bedroom AC'
+        message: 'The bedroom AC is on'
+- alias: 'Notify when Bedroom AC turns off'
+  trigger:
+    - platform: state
+      entity_id: sensor.bedroom_ac_state
+      from: 'Running'
+      to: 'Idle'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'Bedroom AC'
+        message: 'The bedroom AC is off'
 - alias: Kitchen Tablet Low Battery
   id: kitchen-tablet-low-battery
   triggers:
