@@ -20,6 +20,7 @@ alexa:
       - sensor.dining_room_temperature
       - sensor.kitchen_temperature
       - switch.bedroom_ac_power
+      - switch.bedroom_ac
       - switch.plug_3ssssssssssssssssss
       - switch.living_room_1
       - switch.living_room_2
@@ -134,6 +135,10 @@ alexa:
       - lock
       - cover
   entity_config:
+    switch.bedroom_ac:
+      name: Bedroom AC
+      description: Turns the bedroom AC on and sets it to 62F
+      display_categories: SWITCH
     cover.master_bedroom_blind_1_ac_safe:
       name: Master Bedroom Blind 1
       description: Left window blind in the master bedroom

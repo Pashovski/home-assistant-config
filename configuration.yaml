@@ -27,7 +27,8 @@ cloud: !include cloud.yaml
 input_number:
   ac_temperature:
     name: AC Temperature
-    initial: 64
+    # No initial: this is HA's memory of the believed AC setpoint, so it must
+    # restore across restarts rather than reset.
     min: 60
     max: 80
     step: 1
@@ -158,6 +159,28 @@ template:
             data:
               device: ac_main
               command: power
+
+      # "Alexa, turn on the bedroom AC" -> power on and step down to 62F in one shot.
+      # The IR unit reports nothing back, so on/off is inferred from the plug's draw.
+      # The conditions make this safe to repeat: script.power is a toggle, so firing it
+      # at an already-off unit would turn it back on.
+      - name: Bedroom AC
+        unique_id: bedroom_ac_switch
+        state: "{{ states('sensor.bedroom_ac_watts') | float(0) > 30 }}"
+        turn_on:
+          - condition: template
+            value_template: "{{ states('sensor.bedroom_ac_watts') | float(0) <= 30 }}"
+          # script.turn_on, not the script directly: return to Alexa immediately
+          # instead of blocking for the whole step-down sequence.
+          - action: script.turn_on
+            target:
+              entity_id: script.bedroom_ac_set_temp
+        turn_off:
+          - condition: template
+            value_template: "{{ states('sensor.bedroom_ac_watts') | float(0) > 30 }}"
+          - action: script.turn_on
+            target:
+              entity_id: script.bedroom_ac_power_off
 
   - cover:
       - name: "Master Bedroom Blind 1 (AC Safe)"

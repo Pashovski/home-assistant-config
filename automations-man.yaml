@@ -320,13 +320,17 @@
       data:
         title: 'AC'
         message: 'The AC is off'
+# 30 W sits in the empty 20-50 W band between the 20 W standby ceiling and the 61 W
+# fan-only floor, so no hysteresis is needed. The 30s hold outlasts a full
+# script.bedroom_ac_set_temp step-down (~3s settle + 10 presses), so the notify below
+# reads the final setpoint rather than an intermediate one.
 - alias: 'Bedroom AC State - Start'
   trigger:
     platform: numeric_state
     entity_id: sensor.bedroom_ac_watts
-    above: 5
+    above: 30
     for:
-      seconds: 4
+      seconds: 30
   condition:
     condition: template
     value_template: "{{ states.sensor.bedroom_ac_state.state != 'Running' }}"
@@ -340,7 +344,7 @@
   trigger:
     platform: numeric_state
     entity_id: sensor.bedroom_ac_watts
-    below: 5
+    below: 30
     for:
       minutes: 5
   action:
@@ -360,7 +364,8 @@
     - action: notify.pushbullet
       data:
         title: 'Bedroom AC'
-        message: 'The bedroom AC is on'
+        message: >-
+          The bedroom AC is on - set to {{ states('input_number.ac_temperature') | int }}F
 - alias: 'Notify when Bedroom AC turns off'
   trigger:
     - platform: state

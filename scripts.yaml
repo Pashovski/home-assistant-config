@@ -454,9 +454,16 @@ bedroom_ac_temp_up:
       data:
         command: 
           - b64:JgBQAAABJJQTNxITEhMSExITEhMSExITEjgSOBI4EjgSNxM3EzcTNxMSEzcTEhM3EzcTEhMSExITNxMSEzcSExITEjgSOBI4EgAGdwABKVISAA0F
-    - service: input_number.increment
-      target:
-        entity_id: input_number.ac_temperature
+    # Pressing while the AC is off does nothing to the unit, so don't move the number.
+    - alias: Track the setpoint only while the AC is running
+      if:
+        - condition: numeric_state
+          entity_id: sensor.bedroom_ac_watts
+          above: 30
+      then:
+        - service: input_number.increment
+          target:
+            entity_id: input_number.ac_temperature
 
 bedroom_ac_temp_down:
   sequence:
@@ -466,9 +473,139 @@ bedroom_ac_temp_down:
       data:
         command: 
           - b64:JgBQAAABJZQSOBITEhMSExITEhMSExISEzcTNxM3EzcTNxM3EzcTNxM3EzcTEhITEjgSExITEhMSExITEjgSOBITEjcTNxM3EwAGdgABKVISAA0F
-    - service: input_number.decrement
+    # Pressing while the AC is off does nothing to the unit, so don't move the number.
+    - alias: Track the setpoint only while the AC is running
+      if:
+        - condition: numeric_state
+          entity_id: sensor.bedroom_ac_watts
+          above: 30
+      then:
+        - service: input_number.decrement
+          target:
+            entity_id: input_number.ac_temperature
+
+# The AC gives HA no readable state, so input_number.ac_temperature is only a
+# believed setpoint. A full power-on run always resyncs it from the 72F boot default.
+# The 30 W threshold sits in the empty 20-50 W band between the 20 W standby ceiling
+# and the 61 W fan-only floor.
+# The guards below read sensor.bedroom_ac_watts, which is only as fresh as the plug's
+# TelePeriod (set to 10s on SW_AC_Bedroom; its Tasmota 8.1 build has no PowerDelta).
+# Raising TelePeriod back toward 300 widens the window where the "already running"
+# guard reads a stale 0 W and IR-toggles a running AC off.
+# Once the unit has been running a few minutes its display sleeps, and the next IR
+# command only wakes it back up without acting. So powering off takes two presses:
+# the first wakes the display, the second actually turns the unit off.
+# Turning ON stays a single press - the display is already asleep/off and the unit
+# acts on the first command.
+bedroom_ac_power_off:
+  alias: Bedroom AC - Power Off (wake display, then off)
+  mode: single
+  sequence:
+    - alias: Wake the display
+      service: script.power
+    # Bump this if the display needs longer to come up.
+    - delay:
+        seconds: 2
+    - alias: Actually power off
+      service: script.power
+
+bedroom_ac_set_temp:
+  alias: Bedroom AC - Power On and Set Temperature
+  mode: single
+  fields:
+    target_temp:
+      name: Target temperature
+      description: Target setpoint in F. AC boots at 72F; sends (72 - target) temp-down presses.
+      default: 62
+      selector:
+        number:
+          min: 60
+          max: 72
+          step: 1
+          unit_of_measurement: "F"
+  variables:
+    target: "{{ (target_temp | default(62)) | int }}"
+    presses: "{{ 72 - ((target_temp | default(62)) | int) }}"
+  sequence:
+    - alias: Abort if the power sensor is not reporting a number
+      if:
+        - condition: template
+          value_template: "{{ states('sensor.bedroom_ac_watts') | float(-1) < 0 }}"
+      then:
+        - service: system_log.write
+          data:
+            level: error
+            logger: bedroom_ac_set_temp
+            message: "Aborted: sensor.bedroom_ac_watts is '{{ states('sensor.bedroom_ac_watts') }}'."
+        - stop: Power sensor unavailable
+
+    # Can't know the real setpoint of an already-running unit, and power-cycling to
+    # force a 72F reset risks short-cycling the compressor. Abort instead.
+    - alias: Abort if the AC is already running
+      if:
+        - condition: numeric_state
+          entity_id: sensor.bedroom_ac_watts
+          above: 30
+      then:
+        - service: system_log.write
+          data:
+            level: warning
+            logger: bedroom_ac_set_temp
+            message: >-
+              Aborted: AC already drawing {{ states('sensor.bedroom_ac_watts') }} W.
+              Real setpoint unknown; not sending power or temp presses.
+        - stop: AC already running
+
+    - alias: Send IR power (toggle) - unit boots at 72F
+      service: script.power
+
+    - alias: Wait for the plug to confirm the unit spun up
+      wait_template: "{{ states('sensor.bedroom_ac_watts') | float(0) > 30 }}"
+      timeout: "00:01:00"
+      continue_on_timeout: true
+
+    - alias: Fail loudly if power-on never confirmed
+      if:
+        - condition: template
+          value_template: "{{ not wait.completed }}"
+      then:
+        - service: system_log.write
+          data:
+            level: error
+            logger: bedroom_ac_set_temp
+            message: >-
+              Aborted: no draw above 30 W within 60 s of IR power.
+              input_number.ac_temperature left untouched.
+        - stop: Power-on not confirmed
+
+    - alias: Let the AC controller settle before accepting presses
+      delay:
+        seconds: 3
+
+    - alias: Unit is at its 72F boot default
+      service: input_number.set_value
       target:
         entity_id: input_number.ac_temperature
+      data:
+        value: 72
+
+    - alias: Step down to target
+      repeat:
+        count: "{{ presses }}"
+        sequence:
+          - service: script.bedroom_ac_temp_down
+          # Bump this delay if presses get dropped.
+          - delay:
+              milliseconds: 400
+
+    # Authoritative: corrects drift from the per-press tracking or a dropped press.
+    - alias: Final authoritative setpoint
+      service: input_number.set_value
+      target:
+        entity_id: input_number.ac_temperature
+      data:
+        value: "{{ target }}"
+
 morning_routine:
   alias: 'Morning Routine'
   sequence:
