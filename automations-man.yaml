@@ -320,13 +320,11 @@
       data:
         title: 'AC'
         message: 'The AC is off'
-# Bedroom AC is on KMC Plug 2 outlet 3; the meter is whole-strip (lamp ~35W,
-# AC compressor ~1400W), so thresholds sit between the two.
 - alias: 'Bedroom AC State - Start'
   trigger:
     platform: numeric_state
-    entity_id: sensor.kmc_plug_2_watts
-    above: 150
+    entity_id: sensor.bedroom_ac_watts
+    above: 5
     for:
       seconds: 4
   condition:
@@ -341,8 +339,8 @@
 - alias: 'Bedroom AC State - Idle'
   trigger:
     platform: numeric_state
-    entity_id: sensor.kmc_plug_2_watts
-    below: 60
+    entity_id: sensor.bedroom_ac_watts
+    below: 5
     for:
       minutes: 5
   action:

@@ -505,15 +505,6 @@ sensor:
     qos: 1
     payload_available: 'Online'
     payload_not_available: 'Offline'
-  - name: 'KMC Plug 2 Watts'
-    state_topic: 'tele/SW_Multi_Monitoring_2/SENSOR'
-    value_template: "{{value_json['ENERGY'].Power }}"
-    qos: 2
-    unit_of_measurement: 'W'
-    icon: mdi:flash-circle
-    availability_topic: 'tele/SW_Multi_Monitoring_2/LWT'
-    payload_available: 'Online'
-    payload_not_available: 'Offline'
   - name: 'Oven State'
     state_topic: 'hass/state/Oven'
     icon: mdi:air-conditioner
