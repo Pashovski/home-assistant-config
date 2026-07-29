@@ -600,3 +600,77 @@
         entity_id: media_player.kitchen_echo_dot
       data:
         source: 'Local Speaker'
+
+##Pi-hole Health Monitoring##
+# Three independent checks, each with its own down/up trigger pair:
+#   ping - binary_sensor.pi_hole_host           ICMP to the Pi itself.
+#   dns  - binary_sensor.pi_hole_dns_resolution  dig @192.168.1.5 explicitly
+#          (see configuration.yaml comment - bypasses the container's own
+#          dns: 8.8.8.8 and Pi-hole's own blocklist ambiguity). This is the
+#          "whole house is offline" signal.
+#   api  - binary_sensor.pi_hole_status          native Pi-hole integration.
+#          Only watches `unavailable`, not `off` - off just means blocking is
+#          paused (normal, e.g. someone disabled it for 5 min), not a
+#          failure. `unavailable` is what the actual incident looked like:
+#          the web/API died silently while DNS kept working, so nothing
+#          alerted for 4 weeks.
+# 10 minute hold on the down side so a reboot or a transient blip doesn't
+# page anyone; recovery fires immediately, no hold.
+- alias: 'Pi-hole Health Check'
+  id: pihole_health_check
+  mode: single
+  triggers:
+    - trigger: state
+      id: ping_down
+      entity_id: binary_sensor.pi_hole_host
+      to: ['off', 'unavailable']
+      for:
+        minutes: 10
+    - trigger: state
+      id: ping_up
+      entity_id: binary_sensor.pi_hole_host
+      from: ['off', 'unavailable']
+      to: 'on'
+    - trigger: state
+      id: dns_down
+      entity_id: binary_sensor.pi_hole_dns_resolution
+      to: ['off', 'unavailable']
+      for:
+        minutes: 10
+    - trigger: state
+      id: dns_up
+      entity_id: binary_sensor.pi_hole_dns_resolution
+      from: ['off', 'unavailable']
+      to: 'on'
+    - trigger: state
+      id: api_down
+      entity_id: binary_sensor.pi_hole_status
+      to: 'unavailable'
+      for:
+        minutes: 10
+    - trigger: state
+      id: api_up
+      entity_id: binary_sensor.pi_hole_status
+      from: 'unavailable'
+  actions:
+    - variables:
+        labels:
+          ping_down: 'Pi-hole host is unreachable (ping failing)'
+          ping_up: 'Pi-hole host is reachable again'
+          dns_down: 'Pi-hole is not resolving DNS queries'
+          dns_up: 'Pi-hole DNS resolution is working again'
+          api_down: 'Pi-hole web/API is unavailable (DNS may still be fine)'
+          api_up: 'Pi-hole web/API is reachable again'
+        is_recovery: "{{ trigger.id in ['ping_up', 'dns_up', 'api_up'] }}"
+        minutes_down: >-
+          {% if is_recovery %}
+            {{ ((as_timestamp(trigger.to_state.last_changed) - as_timestamp(trigger.from_state.last_changed)) / 60) | round(0, 'floor') }}
+          {% else %}
+            {{ ((as_timestamp(now()) - as_timestamp(trigger.to_state.last_changed)) / 60) | round(0, 'floor') }}
+          {% endif %}
+    - action: notify.pushbullet
+      data:
+        title: 'Pi-hole'
+        message: >-
+          {{ labels[trigger.id] }}
+          ({{ 'was down ~' ~ minutes_down ~ ' min' if is_recovery else '~' ~ minutes_down ~ ' min so far' }}).

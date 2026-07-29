@@ -63,6 +63,46 @@ tts:
 # binary_sensor:
 #   - platform: wyzesense
 #     device: auto
+
+command_line:
+  # The native `ping` binary_sensor platform errors "does not support platform
+  # setup, please remove it from your config" on this HA version and silently
+  # creates no entity - confirmed absent from core.entity_registry after a
+  # live restart. Using command_line here too rather than sending this to a
+  # third UI integration setup for something this simple. `echo $?` after a
+  # semicolon (not &&/||) means the shell always exits 0 regardless of ping's
+  # result, so command_line only marks this unavailable on a real execution
+  # failure, not a normal "host didn't respond".
+  - binary_sensor:
+      name: 'Pi-hole Host'
+      unique_id: pihole_host_ping
+      device_class: connectivity
+      scan_interval: 60
+      command: 'ping -c 2 -W 2 192.168.1.5 >/dev/null 2>&1; echo $?'
+      command_timeout: 10
+      value_template: "{{ value.strip() }}"
+      payload_on: '0'
+
+  # dig's explicit @192.168.1.5 sends the query straight to the Pi-hole and
+  # ignores resolv.conf entirely - this container has `dns: 8.8.8.8` set in
+  # docker-compose.yml, so any check that resolved through the container's
+  # default resolver would keep "passing" via Google even with Pi-hole fully
+  # dead. Querying hass.pashdoctor.com (the local-only override from
+  # ARCHITECTURE.md) instead of an external domain also sidesteps a false
+  # "healthy" reading from Pi-hole's own ad-blocking: a blocked external
+  # domain still returns a non-empty 0.0.0.0, which would otherwise look like
+  # a successful resolution. 192.168.1.230 is the only answer that means both
+  # "Pi-hole answered" and "the override is still correct".
+  - binary_sensor:
+      name: 'Pi-hole DNS Resolution'
+      unique_id: pihole_dns_resolution
+      device_class: connectivity
+      scan_interval: 60
+      command: 'dig @192.168.1.5 +time=2 +tries=1 +short hass.pashdoctor.com'
+      command_timeout: 5
+      value_template: "{{ value.strip() }}"
+      payload_on: '192.168.1.230'
+
 # Example configuration.yaml entry
 wake_on_lan:
 
@@ -472,11 +512,11 @@ rest_command:
   autoremote_find_caitlin_phone:
     url: !secret autoremote_find_caitlin_phone_url
   fast_api_idling:
-    url: 'http://192.168.1.230:8000/send-status/idle'
+    url: 'http://127.0.0.1:8000/send-status/idle'
   fast_api_washing:
-    url: 'http://192.168.1.230:8000/send-status/washing'
+    url: 'http://127.0.0.1:8000/send-status/washing'
   fast_api_ooo:
-    url: 'http://192.168.1.230:8000/send-status/outoforder'
+    url: 'http://127.0.0.1:8000/send-status/outoforder'
 twilio:
   account_sid: !secret twilio_account_sid
   auth_token: !secret twilio_auth_token
