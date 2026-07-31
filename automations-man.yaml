@@ -255,19 +255,6 @@
       entity_id: input_boolean.washer_clean_pete
     - service: input_boolean.turn_on
       entity_id: input_boolean.laundry_ready_to_move
-    - service: notify.twilio
-      data:
-        message: Pete, your clothes are ready to be moved to the dryer.
-        target: +19178060920
-- alias: 'Notify on Fridge Switch State Change'
-  trigger:
-    platform: state
-    entity_id: switch.fridge
-  action:
-    service: notify.twilio
-    data:
-      message: "The fridge switch state changed to {{ states('switch.fridge') }}"
-      target: +19292503352
 - alias: 'AC State - Start'
   trigger:
     platform: numeric_state
@@ -570,36 +557,41 @@
         data:
           type: announce
           method: tts
-  mode: singles
-- alias: Tablet arrived in kitchen - connect audio
-  initial_state: true
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.kitchen1_watts
-      above: 0.5
-      for:
-        seconds: 5
-  action:
-    - service: media_player.select_source
-      target:
-        entity_id: media_player.kitchen_echo_dot
-      data:
-        source: 'DESKTOP'
-
-- alias: Tablet left kitchen - disconnect audio
-  initial_state: true
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.kitchen1_watts
-      below: 0.5
-      for:
-        seconds: 5
-  action:
-    - service: media_player.select_source
-      target:
-        entity_id: media_player.kitchen_echo_dot
-      data:
-        source: 'Local Speaker'
+  mode: single
+# Kitchen1 outlet (SW_Kitchen1) is dead hardware, removed 2026-07-30 along
+# with sensor.kitchen1_watts. This pair used the plug's charging-current
+# draw as a presence proxy for the kitchen tablet - crossing 0.5W meant
+# it was plugged in/out. Preserved in case it's worth rebuilding off a
+# different power/presence signal.
+# - alias: Tablet arrived in kitchen - connect audio
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.kitchen1_watts
+#       above: 0.5
+#       for:
+#         seconds: 5
+#   action:
+#     - service: media_player.select_source
+#       target:
+#         entity_id: media_player.kitchen_echo_dot
+#       data:
+#         source: 'DESKTOP'
+#
+# - alias: Tablet left kitchen - disconnect audio
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.kitchen1_watts
+#       below: 0.5
+#       for:
+#         seconds: 5
+#   action:
+#     - service: media_player.select_source
+#       target:
+#         entity_id: media_player.kitchen_echo_dot
+#       data:
+#         source: 'Local Speaker'
 
 ##Pi-hole Health Monitoring##
 # Three independent checks, each with its own down/up trigger pair:

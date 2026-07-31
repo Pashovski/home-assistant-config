@@ -428,31 +428,6 @@
         type: announce
         method: tts
   id: 62fd808d8971417eaa6a3be0373facfc
-- id: '1673063887141'
-  alias: New Automation
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: hello-world
-  condition: []
-  action:
-  - type: turn_off
-    device_id: 457db81b2802b8ba73202cc757e48f29
-    entity_id: light.living_room_lamp
-    domain: light
-  mode: single
-- id: '1673064927013'
-  alias: New Automation2
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: hello-worlds
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
-      entity_id: light.0xa4c1389088707aab
-  mode: single
 - id: '1673066807843'
   alias: Washer_Idling
   description: ''
