@@ -529,6 +529,7 @@
         title: 'UPS Input Voltage High'
         message: "CyberPower UPS is seeing high input voltage from ConEd: {{ states('sensor.cyberpower_input_voltage') }}V. UPS status: {{ states('sensor.cyberpower_status') }}. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%."
 - alias: Block Toddlers' Nursery Light Control
+  id: block_toddlers_nursery_light_control
   trigger:
     - platform: state
       entity_id:
@@ -539,8 +540,9 @@
       to: 'on'
   condition:
     - condition: time
-      after: '20:00:00'
-      before: '06:30:00'
+      weekday:
+        - sat
+      before: '06:00:00'
   action:
     - service: homeassistant.turn_off
       target:
