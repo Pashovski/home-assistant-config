@@ -317,7 +317,7 @@
     entity_id: sensor.bedroom_ac_watts
     above: 30
     for:
-      seconds: 30
+      seconds: 10
   condition:
     condition: template
     value_template: "{{ states.sensor.bedroom_ac_state.state != 'Running' }}"
@@ -333,7 +333,7 @@
     entity_id: sensor.bedroom_ac_watts
     below: 30
     for:
-      minutes: 5
+      seconds: 20
   action:
     - service: mqtt.publish
       data:
