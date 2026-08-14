@@ -23,6 +23,11 @@ scene: !include scenes.yaml
 mqtt: !include mqtt.yaml
 cloud: !include cloud.yaml
 
+camera:
+  - platform: ffmpeg
+    name: Nanit Nursery
+    input: rtmp://192.168.1.230:1935/local/f78c4c52
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 input_number:
   ac_temperature:
