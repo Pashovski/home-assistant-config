@@ -449,13 +449,12 @@ timer:
 # Example configuration.yaml entry with include
 #influxdb##
 influxdb:
-  api_version: 2
-  ssl: false
-  host: 192.168.1.230
-  port: 8086
-  token: !secret influxdb_token
-  organization: docker
-  bucket: home_assistant
+  # Connection + auth keys removed 2026-08-16: YAML connection config is
+  # deprecated and stops working in 2026.9.0. HA auto-imported them into a UI
+  # config entry, which is now the source of truth for
+  # url/token/organization/bucket. Manage the connection at
+  # Settings > Devices & Services > InfluxDB.
+  # tags / tags_attributes / default_measurement / include stay in YAML.
   tags:
     source: HA
   tags_attributes:
