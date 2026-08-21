@@ -68,7 +68,7 @@
 - alias: Master Bedroom Pico 1 Off
   trigger:
   - platform: event
-    event type: lutron_caseta_button_event
+    event_type: lutron_caseta_button_event
     event_data:
       device_id: a4f5d906df74cdfb63a94edb9b809af8
       button_type: 'off'
