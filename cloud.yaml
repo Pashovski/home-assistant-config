@@ -23,7 +23,10 @@ alexa:
       - switch.bedroom_ac
       - switch.plug_3ssssssssssssssssss
       - switch.living_room_1
-      - switch.living_room_2
+      # switch.living_room_2 (SW_LRoom1/POWER2) was the white noise machine until the
+      # 2026-09 nursery redo. That dual plug is no longer on the network; the machine
+      # now lives on the nursery strip (SW_MULTI_1/POWER2, switch.nursery_plug_2).
+      - switch.nursery_plug_2
       - automation.kitchen_lights_on
       - switch.nanit
       - group.lamps
@@ -219,9 +222,9 @@ alexa:
       name: Caitlin's Lamp
       description: The lamp by Caitlin
       display_categories: SWITCH
-    switch.living_room_2:
+    switch.nursery_plug_2:
       name: White Noise Machine
-      description: The white noise Machine
+      description: The white noise machine in the nursery
       display_categories: SWITCH
     switch.kmc_plug_2_state_2:
       name: Baby Lamp
