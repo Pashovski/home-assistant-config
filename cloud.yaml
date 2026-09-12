@@ -32,6 +32,7 @@ alexa:
       - cover.master_bedroom_blinds_2
       - cover.master_bedroom_blinds_3
     exclude_entities:
+      - switch.nursery_plug_4
       - group.blinds
       - cover.master_bedroom_blind_1
       - light.0x0017880106c01547_light
@@ -307,10 +308,4 @@ alexa:
       description: the lamp in the nursery
       # name: Nursery Sconce
       # description: the sconce in the nursery
-      display_categories: SWITCH
-    switch.nursery_plug_4:
-      name: Nursery Sconce
-      description: the sconce in the nursery
-      # name: Nursery Lamp
-      # description: the lamp in the nursery
       display_categories: SWITCH
