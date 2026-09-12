@@ -159,8 +159,12 @@ alexa:
       description: The lights in the Kitchen
       display_categories: LIGHT
     light.nursery_sconces_2:
-      name: Nursery Light
-      description: The lights in the Nursery
+      name: Nursery Sconce
+      description: The sconce lights in the Nursery
+      display_categories: LIGHT
+    light.nursery_main_lights:
+      name: Nursery Lights
+      description: The main light in the Nursery
       display_categories: LIGHT
     light.dining_room_chandelier_2:
       name: Chandelier
