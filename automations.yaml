@@ -266,6 +266,9 @@
       data:
         title: Too Hot
         message: "The Temperature in the Nursery is {{ states('sensor.nursery_temperature') }} Degrees"
+# Space heater moved 2026-09-13 from the SW_LRoom1 dual plug (switch.living_room_1)
+# to outlet 1 of the nursery strip (SW_MULTI_1, switch.nursery_plug_1).
+# Left disabled for now - uncomment both when heating season starts.
 # - alias: Nursery Space Heater On
 #   id: 7b9d5c8427454cc98ea3a8e567c291f6
 #   triggers:
@@ -275,7 +278,7 @@
 #   actions:
 #     - action: switch.turn_on
 #       target:
-#         entity_id: switch.living_room_1
+#         entity_id: switch.nursery_plug_1
 
 # - alias: Nursery Space Heater Off
 #   id: c37e2f5031ca4537a62679216733f27c
@@ -286,7 +289,7 @@
 #   actions:
 #     - action: switch.turn_off
 #       target:
-#         entity_id: switch.living_room_1
+#         entity_id: switch.nursery_plug_1
 - alias: Lights Off When We Leave
   trigger:
     platform: state
