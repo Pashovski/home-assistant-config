@@ -203,7 +203,7 @@
   action:
     - service: light.turn_off
       target:
-        entity_id: light.nursery_sconces_2
+        entity_id: light.nursery_sconces
     - service: switch.turn_off
       target:
         entity_id:
@@ -533,7 +533,7 @@
   trigger:
     - platform: state
       entity_id:
-        - light.nursery_sconces_2
+        - light.nursery_sconces
         - switch.nursery_plug_4
         - switch.nursery_plug_3
         - light.hallway_main_lights_2
@@ -547,7 +547,7 @@
     - service: homeassistant.turn_off
       target:
         entity_id:
-          - light.nursery_sconces_2
+          - light.nursery_sconces
           - switch.nursery_plug_4
           - switch.nursery_plug_3
           - light.hallway_main_lights_2

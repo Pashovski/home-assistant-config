@@ -8,7 +8,7 @@ alexa:
       - light.main_bathroom_main_lights_2
       - light.main_bathroom_sconces_2
       - light.master_bedroom_ceiling_fan_light_2
-      - light.nursery_sconces_2
+      - light.nursery_sconces
       - light.hallway_main_lights_2
       - light.living_room
       - light.entryway_light
@@ -162,7 +162,7 @@ alexa:
       name: Kitchen Lights
       description: The lights in the Kitchen
       display_categories: LIGHT
-    light.nursery_sconces_2:
+    light.nursery_sconces:
       name: Nursery Sconce
       description: The sconce lights in the Nursery
       display_categories: LIGHT

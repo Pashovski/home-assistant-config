@@ -483,7 +483,7 @@ recorder:
       - sensor.multi_monitoring_1_energy_total
       - sensor.multi_monitoring_2_energy_total
       - sensor.microwave_energy_total
-      - light.nursery_sconces_2
+      - light.nursery_sconces
       - switch.nursery_plug_3
       - switch.nursery_plug_4
       - light.hallway_main_lights_2
