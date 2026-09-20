@@ -154,12 +154,12 @@ test_pushbullet:
       mac: a8:23:fe:e5:45:55
   - service: media_player.select_source
     data:
-      entity_id: media_player.living_room_denon
+      entity_id: media_player.denon_avr_x1500h
       source: AUX
   - delay: 0:00:10
   - service: media_player.select_source
     data:
-      entity_id: media_player.living_room_denon
+      entity_id: media_player.denon_avr_x1500h
       source: AUX
   - delay: 0:00:10
 test_the_lights:
@@ -174,10 +174,10 @@ test_the_media:
   sequence:
   - service: media_player.turn_on
     data:
-      entity_id: media_player.living_room_tv
+      entity_id: media_player.lgtv
   - service: media_player.select_source
     data:
-      entity_id: media_player.living_room_denon
+      entity_id: media_player.denon_avr_x1500h
       source: AUX
   - delay: 0:00:10
 test_the_media2:
@@ -188,12 +188,12 @@ test_the_media2:
       mac: a8:23:fe:e5:45:55
   - service: media_player.select_source
     data:
-      entity_id: media_player.living_room_denon
+      entity_id: media_player.denon_avr_x1500h
       source: AUX
   - delay: 0:00:10
   - service: media_player.select_source
     data:
-      entity_id: media_player.living_room_denon
+      entity_id: media_player.denon_avr_x1500h
       source: AUX
   - delay: 0:00:10
 slow_light_test:

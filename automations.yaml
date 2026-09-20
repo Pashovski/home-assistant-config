@@ -87,20 +87,23 @@
   condition: []
   action:
   - data: {}
-    entity_id: light.living_room_hue
+    entity_id: light.living_room
     service: light.turn_off
 - id: '1587830481783'
   alias: Netflix
   description: Dim the lights when netflix/hulu/amazon prime plays
   trigger:
-  - entity_id: media_player.living_room_tv
-    from: 'on'
-    platform: state
-    to: playing
+  - platform: state
+    entity_id: media_player.lgtv
+    attribute: source
+    to:
+    - Netflix
+    - Hulu
+    - Prime Video
   condition: []
   action:
   - data: {}
-    entity_id: light.living_room_hue
+    entity_id: light.living_room
     service: light.turn_off
 - alias: Bathroom Lights Test
   trigger:

@@ -109,25 +109,11 @@ command_line:
 # Example configuration.yaml entry
 wake_on_lan:
 
-# Example configuration.yaml entry
-# webostv:
-#   host: 192.168.15.15
-#   name: 'Living Room TV'
-#   turn_on_action:
-#     service: wake_on_lan.send_magic_packet
-#     data:
-#       mac: "a8:23:fe:e5:45:55"
-#       broadcast_address: 192.168.15.3
-#   customize:
-#     sources:
-#         - livetv
-#         - youtube
-#         - makotv
-#         - netflix
-#         - Amazon Prime Video
-#         - hulu
-#         - HDMI
-# Example configuration.yaml entry
+# LG webOS TV is a UI config entry (Settings > Devices & Services > LG webOS TV),
+# entity media_player.lgtv, host 192.168.15.90. YAML webostv config was removed
+# upstream in 2022. Power-on is the 'Turn On LG TV with WakeOnLan' automation in
+# automations-man.yaml (webostv.turn_on trigger -> magic packet on br15).
+
 
 sensor:
   # - platform: pushbullet
@@ -463,6 +449,8 @@ influxdb:
   include:
     domains:
       - sensor
+    entities:
+      - media_player.lgtv
 ##recorder##
 recorder:
   include:

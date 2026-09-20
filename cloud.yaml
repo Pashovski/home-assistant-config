@@ -15,6 +15,7 @@ alexa:
       - lock.august_smart_lock_pro_3rd_gen
       - switch.front_door_bolt
       - media_player.denon_avr_x1500h
+      - media_player.lgtv
       - media_player.libreelec
       - sensor.nursery_temperature
       - sensor.dining_room_temperature
@@ -233,6 +234,10 @@ alexa:
     media_player.libreelec:
       name: Kodi
       description: The media player in the Living ROom
+      display_categories: TV
+    media_player.lgtv:
+      name: Living Room TV
+      description: The LG OLED in the living room
       display_categories: TV
     media_player.denon_avr_x1500h:
       name: Living Room Denon

@@ -477,15 +477,18 @@
     - service: light.turn_off
       entity_id: light.master_bedroom_ceiling_fan_light
 
+# media_player.turn_on on the webOS entity fires this trigger; the TV itself
+# can't be woken over the SSAP socket when it's off, so we WoL it. The NUC has
+# a leg on br15 (eno1.15) purely so this packet lands on the IoT VLAN.
 - alias: 'Turn On LG TV with WakeOnLan'
   trigger:
     - platform: webostv.turn_on
-      entity_id: media_player.lg_webos_smart_tv # change this to the entity id of your TV
+      entity_id: media_player.lgtv
   action:
     - service: wake_on_lan.send_magic_packet
       data:
-        mac: a8:23:fe:e5:45:55 # your TV's MAC address
-        broadcast_address: 192.168.15.3
+        mac: a8:23:fe:e5:45:55
+        broadcast_address: 192.168.15.255
 #testing 123
 ##Battery Backup Automations
 - alias: 'Notify when UPS switches to battery'
