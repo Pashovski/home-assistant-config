@@ -671,3 +671,30 @@
         message: >-
           {{ labels[trigger.id] }}
           ({{ 'was down ~' ~ minutes_down ~ ' min' if is_recovery else '~' ~ minutes_down ~ ' min so far' }}).
+
+- alias: 'Real-Debrid expiring soon'
+  # Prepaid, does not auto-renew. Umbrella's own warning is an on-screen Kodi
+  # toast; this is the one that reaches a phone. Fires once per threshold
+  # crossing, not daily, because the trigger is a state change through the
+  # boundary. 'unknown'/'unavailable' can't satisfy a numeric below, so an API
+  # failure stays silent rather than crying wolf.
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.real_debrid_days_remaining
+      below: 14
+    - platform: numeric_state
+      entity_id: sensor.real_debrid_days_remaining
+      below: 7
+    - platform: numeric_state
+      entity_id: sensor.real_debrid_days_remaining
+      below: 3
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'Real-Debrid expiring'
+        message: >-
+          Real-Debrid premium expires in
+          {{ states('sensor.real_debrid_days_remaining') }} days
+          ({{ state_attr('sensor.real_debrid_days_remaining','expiration') | as_datetime | as_local | default('date unknown', true) }}).
+          Renew at real-debrid.com or Kodi playback will start failing with
+          permission errors.

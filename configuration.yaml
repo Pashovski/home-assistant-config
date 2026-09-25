@@ -106,6 +106,33 @@ command_line:
       value_template: "{{ value.strip() }}"
       payload_on: '192.168.1.5'
 
+  # Real-Debrid premium is PREPAID and does not auto-renew - it simply lapses,
+  # and Umbrella's only warning is an on-screen Kodi toast you have to be
+  # sitting in front of to see (service.py fires once per band at ~14/10/7/4/2
+  # days). This sensor is the out-of-band version. It reports days remaining;
+  # 'unknown' means the API call failed or the token is wrong, which the
+  # automation deliberately ignores rather than alerting on.
+  - sensor:
+      name: 'Real-Debrid Days Remaining'
+      unique_id: real_debrid_days_remaining
+      scan_interval: 21600          # 4x/day; the value moves once a day
+      command_timeout: 20
+      unit_of_measurement: 'days'
+      # The token lives in /config/.rd_token (chmod 600), not secrets.yaml,
+      # which is mode 644. command_line runs via create_subprocess_shell, so
+      # the $(cat ...) substitution happens in the shell and the token never
+      # appears in this file, in the HA log, or in the entity's state.
+      command: >-
+        curl -s -m 15 -H "Authorization: Bearer $(cat /config/.rd_token)"
+        https://api.real-debrid.com/rest/1.0/user
+      value_template: >-
+        {% set d = value | from_json %}
+        {{ (d.premium / 86400) | round(0, 'floor') if d.premium is defined else none }}
+      json_attributes:
+        - username
+        - type
+        - expiration
+
 # Example configuration.yaml entry
 wake_on_lan:
 
@@ -479,6 +506,7 @@ recorder:
       - media_player.lgtv   # LG webOS TV (UI config entry); state, source, volume
       - switch.lg_tv        # WoL switch, ping-polled state of 192.168.15.90
       - media_player.kodi   # LibreELEC Pi (UI config entry); playing/paused + title
+      - sensor.real_debrid_days_remaining
 
 logger:
   default: info

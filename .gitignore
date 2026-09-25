@@ -54,3 +54,5 @@ custom_components/*
 !custom_components/.gitkeep
 www/community/
 .cache/
+
+.rd_token
