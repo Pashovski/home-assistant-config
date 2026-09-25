@@ -476,6 +476,9 @@ recorder:
       - switch.nursery_plug_4
       - light.hallway_main_lights_2
       - automation.block_toddlers_nursery_light_control
+      - media_player.lgtv   # LG webOS TV (UI config entry); state, source, volume
+      - switch.lg_tv        # WoL switch, ping-polled state of 192.168.15.90
+      - media_player.kodi   # LibreELEC Pi (UI config entry); playing/paused + title
 
 logger:
   default: info

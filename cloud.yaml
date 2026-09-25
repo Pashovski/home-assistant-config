@@ -16,7 +16,7 @@ alexa:
       - switch.front_door_bolt
       - media_player.denon_avr_x1500h
       - media_player.lgtv
-      - media_player.libreelec
+      - media_player.kodi
       - sensor.nursery_temperature
       - sensor.dining_room_temperature
       - sensor.kitchen_temperature
@@ -231,9 +231,9 @@ alexa:
       name: Baby Lamp
       description: The lamp by the baby
       display_categories: SWITCH
-    media_player.libreelec:
+    media_player.kodi:
       name: Kodi
-      description: The media player in the Living ROom
+      description: The media player in the Living Room
       display_categories: TV
     media_player.lgtv:
       name: Living Room TV
