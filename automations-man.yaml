@@ -698,3 +698,27 @@
           ({{ state_attr('sensor.real_debrid_days_remaining','expiration') | as_datetime | as_local | default('date unknown', true) }}).
           Renew at real-debrid.com or Kodi playback will start failing with
           permission errors.
+
+- alias: 'Kodi unreachable'
+  # 10 minutes of silence before alerting, so a reboot or a brief network blip
+  # stays quiet. The message distinguishes the two failure modes: if the Pi
+  # still answers ping then Kodi itself crashed, which is the case worth
+  # knowing about before sitting down to watch something. Expect this to fire
+  # during deliberate downtime (SSD swap, LibreELEC update).
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kodi_service
+      to: 'off'
+      for: '00:10:00'
+  action:
+    - action: notify.pushbullet
+      data:
+        title: 'Kodi unreachable'
+        message: >-
+          {% if is_state('binary_sensor.kodi_host','on') %}
+          Kodi has stopped answering but the Pi (192.168.15.111) still responds
+          to ping - Kodi itself has crashed or hung.
+          {% else %}
+          The Kodi box (192.168.15.111) is not responding to ping at all - it is
+          powered off or off the network.
+          {% endif %}

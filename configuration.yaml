@@ -106,6 +106,37 @@ command_line:
       value_template: "{{ value.strip() }}"
       payload_on: '192.168.1.5'
 
+  # Kodi health, split the same way as the Pi-hole pair above: the ping proves
+  # the Pi is powered and on the network, the JSON-RPC ping proves Kodi itself
+  # is answering. A crashed or hung Kodi on a live Pi is the actual failure
+  # mode here, and only the pair distinguishes it from the box being off.
+  # Port 9090 is Kodi's raw JSON-RPC socket, which takes no authentication by
+  # design, so this check needs no credentials in the config. `|| true` keeps
+  # the shell exit status 0 so command_line only reports unavailable on a real
+  # execution failure, not on "Kodi did not answer" - same reasoning as the
+  # `; echo $?` on the Pi-hole ping above.
+  - binary_sensor:
+      name: 'Kodi Host'
+      unique_id: kodi_host_ping
+      device_class: connectivity
+      scan_interval: 60
+      command: 'ping -c 2 -W 2 192.168.15.111 >/dev/null 2>&1; echo $?'
+      command_timeout: 10
+      value_template: "{{ value.strip() }}"
+      payload_on: '0'
+
+  - binary_sensor:
+      name: 'Kodi Service'
+      unique_id: kodi_service_jsonrpc
+      device_class: connectivity
+      scan_interval: 60
+      command: >-
+        echo '{"jsonrpc":"2.0","id":1,"method":"JSONRPC.Ping"}'
+        | nc -w 2 192.168.15.111 9090 || true
+      command_timeout: 10
+      value_template: "{{ 'pong' if 'pong' in value else 'dead' }}"
+      payload_on: 'pong'
+
   # Real-Debrid premium is PREPAID and does not auto-renew - it simply lapses,
   # and Umbrella's only warning is an on-screen Kodi toast you have to be
   # sitting in front of to see (service.py fires once per band at ~14/10/7/4/2
@@ -507,6 +538,8 @@ recorder:
       - switch.lg_tv        # WoL switch, ping-polled state of 192.168.15.90
       - media_player.kodi   # LibreELEC Pi (UI config entry); playing/paused + title
       - sensor.real_debrid_days_remaining
+      - binary_sensor.kodi_host
+      - binary_sensor.kodi_service
 
 logger:
   default: info
