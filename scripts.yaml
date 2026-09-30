@@ -46,12 +46,6 @@ sienna:
       media_content_id: Elmo
       media_content_type: SPOTIFY
     service: media_player.play_media
-sienna_button:
-  alias: Sienna_Button
-  sequence:
-  - service: light.turn_off
-    data:
-      entity_id: light.nursery_sconces
 '1586176470577':
   alias: Music Test
   sequence:
