@@ -200,15 +200,14 @@
     topic: 'zigbee2mqtt/sienna_button'
     value_template: '{{ value_json.action }}'
     payload: 'single'
+  # Plain on/off toggle for the nursery lamp only (switch.nursery_plug_3).
+  # Until 2026-09-30 this press also killed light.nursery_sconces and
+  # switch.nursery_plug_4; that was dropped on purpose - the button is the
+  # lamp's switch and nothing else.
   action:
-    - service: light.turn_off
+    - service: switch.toggle
       target:
-        entity_id: light.nursery_sconces
-    - service: switch.turn_off
-      target:
-        entity_id:
-          - switch.nursery_plug_3
-          - switch.nursery_plug_4
+        entity_id: switch.nursery_plug_3
 - alias: Find_Phone_Button_Pasha
   trigger:
     platform: mqtt
