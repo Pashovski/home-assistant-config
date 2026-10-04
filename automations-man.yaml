@@ -52,16 +52,6 @@
       data:
         title: 'August Lock State Changed'
         message: "The August Smart Lock is now {{ states('lock.august_smart_lock_pro_3rd_gen') }}"
-- alias: 'Notify when UPS switches to battery'
-  trigger:
-    - platform: state
-      entity_id: sensor.cyberpower_status
-      to: 'OB'
-  action:
-    - action: notify.pushbullet
-      data:
-        title: 'UPS On Battery'
-        message: "CyberPower UPS has switched to battery power. Input voltage: {{ states('sensor.cyberpower_input_voltage') }}V. Battery charge: {{ states('sensor.cyberpower_battery_charge') }}%. Est. runtime: {{ states('sensor.cyberpower_battery_runtime') }} seconds."
 - alias: Bedroom Space Heater Off
   trigger:
     platform: numeric_state
@@ -399,10 +389,13 @@
 #testing 123
 ##Battery Backup Automations
 - alias: 'Notify when UPS switches to battery'
+  # sensor.cyberpower_status is the human-readable display ("Online",
+  # "On Battery Discharging") and never equals 'OB'. The raw NUT code is
+  # in _status_data and carries extra flags on battery ("OB DISCHRG"),
+  # so test for the OB flag rather than an exact match.
   trigger:
-    - platform: state
-      entity_id: sensor.cyberpower_status
-      to: 'OB'
+    - platform: template
+      value_template: "{{ 'OB' in states('sensor.cyberpower_status_data').split() }}"
   action:
     - action: notify.pushbullet
       data:
