@@ -281,6 +281,10 @@
       data:
         type: announce
         method: tts
+  - service: notify.pushbullet
+    data:
+      title: Washer Finished
+      message: The clothes are ready to be moved to the dryer
   id: 62fd808d8971417eaa6a3be0373facfc
 - id: '1673066807843'
   alias: Washer_Idling
