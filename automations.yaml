@@ -65,17 +65,6 @@
     - light.living_room
     - light.0xa4c1389088707aab
   id: cbfa9d06009f4b289860e429a1408544
-- alias: Master Bedroom Pico 1 Off
-  trigger:
-  - platform: event
-    event_type: lutron_caseta_button_event
-    event_data:
-      device_id: a4f5d906df74cdfb63a94edb9b809af8
-      button_type: 'off'
-  action:
-  - service: switch.turn_off
-    entity_id: switch.bedroom_2
-  id: 65b7259f16d14f79b4c6044e8f7c1618
 - id: '1587828654963'
   alias: Kodi
   description: Turn the lights off when Kodi plays
@@ -515,7 +504,7 @@
     data: {}
   mode: single
 - id: '1728849436336'
-  alias: Master Bedroom Pico Off
+  alias: Caitlin Pico Off
   description: ''
   trigger:
   - platform: device
@@ -531,7 +520,7 @@
     data: {}
   mode: single
 - id: '1728849494678'
-  alias: Master Bedroom Pico On
+  alias: Caitlin Pico On
   description: ''
   trigger:
   - platform: device
@@ -546,38 +535,4 @@
       entity_id:
       - switch.bedroom_2
     data: {}
-  mode: single
-- id: '1728850885465'
-  alias: Master Bedroom Pico 2 On
-  description: ''
-  trigger:
-  - platform: device
-    device_id: f77a405ed1412cbd42cc5b4062388b7d
-    domain: lutron_caseta
-    type: press
-    subtype: 'on'
-  condition: []
-  action:
-  - service: switch.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.bedroom_1
-  mode: single
-- id: '1728851104319'
-  alias: Master Bedroom Pico 2 Off
-  description: ''
-  trigger:
-  - platform: device
-    device_id: f77a405ed1412cbd42cc5b4062388b7d
-    domain: lutron_caseta
-    type: press
-    subtype: 'off'
-  condition: []
-  action:
-  - service: switch.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.bedroom_1
   mode: single
