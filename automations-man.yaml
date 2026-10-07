@@ -622,3 +622,66 @@
           The Kodi box (192.168.15.111) is not responding to ping at all - it is
           powered off or off the network.
           {% endif %}
+- alias: Read Caitlin's WhatsApp Aloud
+  id: whatsapp_caitlin_tts
+  mode: queued
+  max: 10
+  trigger:
+    - platform: state
+      entity_id: sensor.sm_s721u1_last_notification
+      attribute: post_time
+  variables:
+    attrs: "{{ trigger.to_state.attributes if trigger.to_state is not none else {} }}"
+    # WhatsApp collapses unread messages into a bundle and the Companion app
+    # reports the bundle, not the individual message. Two bundle shapes:
+    #   A: text "N messages from N chats", lines "Caitlin Davidson: <text>"
+    #   B: text "N new messages" (title = contact), lines are bare messages
+    # Newest message is always the LAST line.
+    is_bundle: >-
+      {{ (attrs.get('android.text') or '')
+         | regex_match('^\\d+ (new )?messages?( from \\d+ chats?)?$', ignorecase=true) }}
+    msg: >-
+      {% if is_bundle %}
+      {% set l = attrs.get('android.textLines') or [] %}
+      {% set last = (l | last | string) if l | length > 0 else '' %}
+      {% if last.startswith('Caitlin Davidson:') %}{{ last | regex_replace('^Caitlin Davidson:\\s*', '') }}
+      {%- elif attrs.get('android.title') == 'Caitlin Davidson' %}{{ last }}
+      {%- endif %}
+      {%- else -%}
+      {{ attrs.get('android.text') or '' }}
+      {%- endif %}
+  condition:
+    - condition: template
+      alias: Real new notification (post_time changed)
+      value_template: >-
+        {{ trigger.to_state is not none
+           and attrs.get('post_time') is not none
+           and (trigger.from_state is none
+                or trigger.from_state.attributes.get('post_time') != attrs.get('post_time')) }}
+    - condition: template
+      alias: From WhatsApp
+      value_template: "{{ attrs.get('package') == 'com.whatsapp' }}"
+    - condition: template
+      alias: Direct chat with Caitlin (channel_id prefix)
+      value_template: >-
+        {{ (attrs.get('channel_id') or '').startswith('18145732130@s.whatsapp.net') }}
+    - condition: template
+      alias: Has a message from Caitlin, not a group
+      value_template: >-
+        {{ (msg | string | trim) != ''
+           and not (attrs.get('android.isGroupConversation') | bool(false)) }}
+    - condition: template
+      alias: Bundle actually gained a new message
+      value_template: >-
+        {{ not is_bundle
+           or trigger.from_state is none
+           or trigger.from_state.attributes.get('android.textLines') != attrs.get('android.textLines')
+           or trigger.from_state.attributes.get('android.text') != attrs.get('android.text') }}
+  action:
+    - delay: '00:00:01'     # let the short notification chime finish first
+    - service: notify.mobile_app_sm_s721u1
+      data:
+        message: TTS
+        data:
+          tts_text: "Caitlin says: {{ msg | string | trim }}"
+          media_stream: music_stream
