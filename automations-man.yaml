@@ -640,7 +640,7 @@
     is_bundle: >-
       {{ (attrs.get('android.text') or '')
          | regex_match('^\\d+ (new )?messages?( from \\d+ chats?)?$', ignorecase=true) }}
-    msg: >-
+    raw: >-
       {% if is_bundle %}
       {% set l = attrs.get('android.textLines') or [] %}
       {% set last = (l | last | string) if l | length > 0 else '' %}
@@ -650,6 +650,9 @@
       {%- else -%}
       {{ attrs.get('android.text') or '' }}
       {%- endif %}
+    # Some notifications prefix the sender ("Caitlin Davidson: <text>"); don't read the name twice.
+    msg: >-
+      {{ raw | string | trim | regex_replace('^Caitlin Davidson:\\s*', '') }}
   condition:
     - condition: template
       alias: Real new notification (post_time changed)
@@ -671,6 +674,9 @@
         {{ (msg | string | trim) != ''
            and not (attrs.get('android.isGroupConversation') | bool(false)) }}
     - condition: template
+      alias: Not my own inline reply (WhatsApp re-posts it with title "You")
+      value_template: "{{ attrs.get('android.title') != 'You' }}"
+    - condition: template
       alias: Bundle actually gained a new message
       value_template: >-
         {{ not is_bundle
@@ -683,5 +689,7 @@
       data:
         message: TTS
         data:
+          ttl: 0            # deliver now even if the phone is dozing off-LAN
+          priority: high
           tts_text: "Caitlin says: {{ msg | string | trim }}"
           media_stream: music_stream
