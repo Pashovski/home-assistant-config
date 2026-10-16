@@ -413,10 +413,75 @@ kitchen_door_on:
       entity_id: input_boolean.kitchen_door_state
 find_my_phone:
   sequence:
-    - service: rest_command.autoremote_find_my_phone
+    - service: script.ring_phone_until_found
+      data:
+        phone: sm_s721u1
 find_caitlin_phone:
   sequence:
-    - service: rest_command.autoremote_find_caitlin_phone
+    - service: script.ring_phone_until_found
+      data:
+        phone: sm_s926u
+# Forces ringer to normal and alarm volume to max, rings on the alarm stream,
+# then clears the notification when "Found it" is tapped or after 2 minutes and
+# puts the alarm volume back (so the morning alarm isn't left at max).
+# Restore needs sensor.<phone>_volume_level_alarm enabled; skipped otherwise.
+# Ringer is left on normal. phone = companion app id (notify.mobile_app_<phone>).
+ring_phone_until_found:
+  mode: parallel
+  fields:
+    phone:
+      description: Companion app device id, e.g. sm_s721u1
+  sequence:
+    - variables:
+        prev_alarm_volume: "{{ states('sensor.' ~ phone ~ '_volume_level_alarm') }}"
+    - service: "notify.mobile_app_{{ phone }}"
+      data:
+        message: command_ringer_mode
+        data:
+          command: normal
+    - service: "notify.mobile_app_{{ phone }}"
+      data:
+        message: command_volume_level
+        data:
+          media_stream: alarm_stream
+          command: 100
+    # Push delivery order isn't guaranteed; let the volume land before ringing.
+    - delay: "00:00:02"
+    - service: "notify.mobile_app_{{ phone }}"
+      data:
+        title: Find my phone
+        message: Tap Found it to stop
+        data:
+          tag: "find_phone_{{ phone }}"
+          channel: alarm_stream
+          persistent: true
+          ttl: 0
+          priority: high
+          actions:
+            - action: "FOUND_PHONE_{{ phone }}"
+              title: Found it
+    - wait_for_trigger:
+        - platform: event
+          event_type: mobile_app_notification_action
+          event_data:
+            action: "FOUND_PHONE_{{ phone }}"
+      timeout: "00:02:00"
+      continue_on_timeout: true
+    - service: "notify.mobile_app_{{ phone }}"
+      data:
+        message: clear_notification
+        data:
+          tag: "find_phone_{{ phone }}"
+    - if:
+        - condition: template
+          value_template: "{{ prev_alarm_volume | is_number }}"
+      then:
+        - service: "notify.mobile_app_{{ phone }}"
+          data:
+            message: command_volume_level
+            data:
+              media_stream: alarm_stream
+              command: "{{ prev_alarm_volume | int }}"
 
 power:
   sequence:
