@@ -565,10 +565,6 @@ rest_command:
     url: !secret autoremote_open_front_door_url
   autoremote_kitchen_open_front_door:
     url: !secret autoremote_kitchen_open_front_door_url
-  autoremote_find_my_phone:
-    url: !secret autoremote_find_my_phone_url
-  autoremote_find_caitlin_phone:
-    url: !secret autoremote_find_caitlin_phone_url
   fast_api_idling:
     url: 'http://127.0.0.1:8000/send-status/idle'
   fast_api_washing:
