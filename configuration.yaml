@@ -52,11 +52,6 @@ counter:
     initial: 0
     step: 1
 
-http:
-  use_x_forwarded_for: true
-  trusted_proxies:
-    - 192.168.100.0/24 # swag-network (fixed subnet in docker-compose.yml)
-
 # Text to speech
 tts:
   - platform: google_translate
