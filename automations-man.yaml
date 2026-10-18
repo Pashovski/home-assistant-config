@@ -647,16 +647,22 @@
       entity_id: sensor.sm_s721u1_last_notification
       attribute: post_time
   variables:
-    attrs: "{{ trigger.to_state.attributes if trigger.to_state is not none else {} }}"
+    # Don't put the whole attributes dict in a variable. Since HA 2026.9 the
+    # icon/friendly_name keys are enums, so the rendered dict can't be parsed
+    # back and the variable arrives as a string (every run failed with
+    # "'str object' has no attribute 'get'"). Each template reads the
+    # attributes itself and only plain values are passed between them.
     # WhatsApp collapses unread messages into a bundle and the Companion app
     # reports the bundle, not the individual message. Two bundle shapes:
     #   A: text "N messages from N chats", lines "Caitlin Davidson: <text>"
     #   B: text "N new messages" (title = contact), lines are bare messages
     # Newest message is always the LAST line.
     is_bundle: >-
+      {% set attrs = trigger.to_state.attributes if trigger.to_state is not none else {} %}
       {{ (attrs.get('android.text') or '')
          | regex_match('^\\d+ (new )?messages?( from \\d+ chats?)?$', ignorecase=true) }}
     raw: >-
+      {% set attrs = trigger.to_state.attributes if trigger.to_state is not none else {} %}
       {% if is_bundle %}
       {% set l = attrs.get('android.textLines') or [] %}
       {% set last = (l | last | string) if l | length > 0 else '' %}
@@ -674,31 +680,31 @@
       alias: Real new notification (post_time changed)
       value_template: >-
         {{ trigger.to_state is not none
-           and attrs.get('post_time') is not none
+           and trigger.to_state.attributes.get('post_time') is not none
            and (trigger.from_state is none
-                or trigger.from_state.attributes.get('post_time') != attrs.get('post_time')) }}
+                or trigger.from_state.attributes.get('post_time') != trigger.to_state.attributes.get('post_time')) }}
     - condition: template
       alias: From WhatsApp
-      value_template: "{{ attrs.get('package') == 'com.whatsapp' }}"
+      value_template: "{{ trigger.to_state.attributes.get('package') == 'com.whatsapp' }}"
     - condition: template
       alias: Direct chat with Caitlin (channel_id prefix)
       value_template: >-
-        {{ (attrs.get('channel_id') or '').startswith('18145732130@s.whatsapp.net') }}
+        {{ (trigger.to_state.attributes.get('channel_id') or '').startswith('18145732130@s.whatsapp.net') }}
     - condition: template
       alias: Has a message from Caitlin, not a group
       value_template: >-
         {{ (msg | string | trim) != ''
-           and not (attrs.get('android.isGroupConversation') | bool(false)) }}
+           and not (trigger.to_state.attributes.get('android.isGroupConversation') | bool(false)) }}
     - condition: template
       alias: Not my own inline reply (WhatsApp re-posts it with title "You")
-      value_template: "{{ attrs.get('android.title') != 'You' }}"
+      value_template: "{{ trigger.to_state.attributes.get('android.title') != 'You' }}"
     - condition: template
       alias: Bundle actually gained a new message
       value_template: >-
         {{ not is_bundle
            or trigger.from_state is none
-           or trigger.from_state.attributes.get('android.textLines') != attrs.get('android.textLines')
-           or trigger.from_state.attributes.get('android.text') != attrs.get('android.text') }}
+           or trigger.from_state.attributes.get('android.textLines') != trigger.to_state.attributes.get('android.textLines')
+           or trigger.from_state.attributes.get('android.text') != trigger.to_state.attributes.get('android.text') }}
   action:
     - delay: '00:00:01'     # let the short notification chime finish first
     - service: notify.mobile_app_sm_s721u1
