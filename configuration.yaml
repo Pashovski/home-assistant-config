@@ -45,6 +45,12 @@ input_boolean:
   nursery_light_blocker:
     name: Nursery Light Blocker
     initial: off
+  # Seasonal: ON while the window AC is installed (summer) so "close the blinds"
+  # stops Blind 1 at 20% instead of blocking the unit. No `initial`, so the
+  # state survives restarts. Read by cover.master_bedroom_blind_1_ac_safe.
+  window_ac_installed:
+    name: Window AC Installed
+    icon: mdi:air-conditioner
 
 counter:
   bedroom_heater_activation_count:
@@ -275,12 +281,13 @@ template:
           - action: cover.open_cover
             target:
               entity_id: cover.master_bedroom_blind_1
+        # 20% open only while input_boolean.window_ac_installed is on.
         close_cover:
           - action: cover.set_cover_position
             target:
               entity_id: cover.master_bedroom_blind_1
             data:
-              position: 20
+              position: "{{ 20 if is_state('input_boolean.window_ac_installed', 'on') else 0 }}"
         set_cover_position:
           - action: cover.set_cover_position
             target:
