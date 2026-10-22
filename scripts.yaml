@@ -670,7 +670,7 @@ morning_routine:
   sequence:
     - service: switch.turn_off
       target:
-        entity_id: switch.living_room_2
+        entity_id: switch.nursery_plug_2  # white noise machine (nursery strip, outlet 2)
     - service: switch.turn_on
       target:
         entity_id: switch.nursery_plug_4
