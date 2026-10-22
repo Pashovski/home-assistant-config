@@ -36,6 +36,10 @@ alexa:
       - cover.master_bedroom_blinds_2
       - cover.master_bedroom_blinds_3
     exclude_entities:
+      # Same physical lock via the august cloud integration; the zwave_js entity
+      # below is the one exposed as "Front Door". Exposing both made Alexa ask
+      # "more than one device" on every lock command.
+      - lock.front_door
       - switch.nursery_plug_4
       - group.blinds
       - cover.master_bedroom_blind_1
