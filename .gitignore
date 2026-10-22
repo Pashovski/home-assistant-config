@@ -55,4 +55,6 @@ custom_components/*
 www/community/
 .cache/
 
+# Local dashboard tooling + backups (see tools/README.md) - not part of the config
+tools/
 .rd_token
