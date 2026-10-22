@@ -675,6 +675,22 @@
     # Some notifications prefix the sender ("Caitlin Davidson: <text>"); don't read the name twice.
     msg: >-
       {{ raw | string | trim | regex_replace('^Caitlin Davidson:\\s*', '') }}
+    # Reactions arrive as 'Reacted <emoji> to "<my message>"' (or 'to a photo').
+    # Read them as 'Caitlin reacted to <my message> with a heart'.
+    speech: >-
+      {% set m = msg | string | trim %}
+      {% set r = m | regex_findall('(?s)^Reacted (\\S+) to (.+)$') %}
+      {% if r | length > 0 %}
+      {% set e = r[0][0] | regex_replace('[\ufe0f\U0001F3FB-\U0001F3FF]', '') %}
+      {% set names = {'❤': 'a heart', '👍': 'a thumbs up', '😂': 'a laugh', '😮': 'a wow',
+                      '😢': 'a sad face', '😭': 'a crying face', '🙏': 'praying hands',
+                      '‼': 'a double exclamation mark', '😍': 'heart eyes', '🥰': 'a smiling face with hearts',
+                      '😘': 'a kiss', '🔥': 'fire', '🎉': 'a party popper', '💯': 'a hundred', '🥲': 'a teary smile'} %}
+      {% set target = r[0][1] | trim | regex_replace('(?s)^"(.*)"$', '\\1') %}
+      Caitlin reacted to {{ target }} with {{ names.get(e, e) }}
+      {%- else -%}
+      Caitlin says: {{ m }}
+      {%- endif %}
   condition:
     - condition: template
       alias: Real new notification (post_time changed)
@@ -713,5 +729,5 @@
         data:
           ttl: 0            # deliver now even if the phone is dozing off-LAN
           priority: high
-          tts_text: "Caitlin says: {{ msg | string | trim }}"
+          tts_text: "{{ speech | string | trim }}"
           media_stream: music_stream
