@@ -97,50 +97,27 @@
 - alias: Nursery Low Temperature
   id: 4df6ec1850624467b23d601a5c548ff6
   triggers:
-    - trigger: numeric_state
-      entity_id: sensor.nursery_temperature
-      below: 67
+  - trigger: numeric_state
+    entity_id: sensor.nursery_temperature
+    below: 67
   actions:
-    - action: notify.pushbullet
-      data:
-        title: Too Cold
-        message: "The Temperature in the Nursery is {{ states('sensor.nursery_temperature') }} Degrees"
-
+  - action: notify.pushbullet
+    data:
+      title: Too Cold
+      message: The Temperature in the Nursery is {{ states('sensor.nursery_temperature')
+        }} Degrees
 - alias: Nursery Hi Temperature
   id: 110151f29f2f4a049cd4a0c92c42d70f
   triggers:
-    - trigger: numeric_state
-      entity_id: sensor.nursery_temperature
-      above: 73
+  - trigger: numeric_state
+    entity_id: sensor.nursery_temperature
+    above: 73
   actions:
-    - action: notify.pushbullet
-      data:
-        title: Too Hot
-        message: "The Temperature in the Nursery is {{ states('sensor.nursery_temperature') }} Degrees"
-# Space heater moved 2026-09-13 from the SW_LRoom1 dual plug (switch.living_room_1)
-# to outlet 1 of the nursery strip (SW_MULTI_1, switch.nursery_plug_1).
-# Left disabled for now - uncomment both when heating season starts.
-# - alias: Nursery Space Heater On
-#   id: 7b9d5c8427454cc98ea3a8e567c291f6
-#   triggers:
-#     - trigger: numeric_state
-#       entity_id: sensor.nursery_temperature
-#       below: 68
-#   actions:
-#     - action: switch.turn_on
-#       target:
-#         entity_id: switch.nursery_plug_1
-
-# - alias: Nursery Space Heater Off
-#   id: c37e2f5031ca4537a62679216733f27c
-#   triggers:
-#     - trigger: numeric_state
-#       entity_id: sensor.nursery_temperature
-#       above: 70
-#   actions:
-#     - action: switch.turn_off
-#       target:
-#         entity_id: switch.nursery_plug_1
+  - action: notify.pushbullet
+    data:
+      title: Too Hot
+      message: The Temperature in the Nursery is {{ states('sensor.nursery_temperature')
+        }} Degrees
 - alias: Lights Off When We Leave
   trigger:
     platform: state
@@ -397,5 +374,19 @@
     target:
       entity_id:
       - switch.bedroom_2
+    data: {}
+  mode: single
+- id: '1792347317201'
+  alias: Tag Door Lock is scanned
+  description: ''
+  triggers:
+  - trigger: tag
+    tag_id: df9aa818-8645-41b4-8f18-7c9b08619c25
+  conditions: []
+  actions:
+  - action: lock.lock
+    metadata: {}
+    target:
+      entity_id: lock.august_smart_lock_pro_3rd_gen
     data: {}
   mode: single
