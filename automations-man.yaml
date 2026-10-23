@@ -117,19 +117,6 @@
   action:
     - service: input_boolean.turn_off
       entity_id: input_boolean.dishwasher_ready_to_unload
-- alias: Music Pause
-  trigger:
-    from: 'on'
-    platform: state
-    entity_id: light.nursery_sconces
-    to: 'off'
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
-  action:
-    service: media_player.media_play_pause
-    entity_id: media_player.nursery
 - alias: Reset Laundry Owner On New Wash
   trigger:
     platform: state
