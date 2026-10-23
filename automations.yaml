@@ -312,19 +312,6 @@
     target:
       entity_id: lock.august_smart_lock_pro_3rd_gen
   mode: single
-- id: '1685565438276'
-  alias: Tag Door_Lock is scanned
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: c04731ec-de95-4ed7-ae70-bd732d25cd09
-  condition: []
-  action:
-  - service: lock.lock
-    data: {}
-    target:
-      entity_id: lock.august_smart_lock_pro_3rd_gen
-  mode: single
 - id: '1705718027844'
   description: ''
   trigger:
