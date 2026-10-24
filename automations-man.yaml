@@ -664,9 +664,17 @@
       {{ raw | string | trim | regex_replace('^Caitlin Davidson:\\s*', '') }}
     # Reactions arrive as 'Reacted <emoji> to "<my message>"' (or 'to a photo').
     # Read them as 'Caitlin reacted to <my message> with a heart'.
+    # Attachments arrive as '<icon> Sent a photo', '<icon> Photo' or
+    # '<icon> <caption>'. TTS reads the icon aloud ("camera sent a photo"), so
+    # drop it: 'Caitlin sent a photo', plus ': <caption>' when there is one.
     speech: >-
       {% set m = msg | string | trim %}
       {% set r = m | regex_findall('(?s)^Reacted (\\S+) to (.+)$') %}
+      {% set media = {'📷': 'a photo', '🎥': 'a video', '📹': 'a video', '🎤': 'a voice message',
+                      '🎙': 'a voice message', '🎵': 'an audio file', '📄': 'a document', '📍': 'a location',
+                      '👤': 'a contact', '👾': 'a GIF', '💟': 'a sticker', '📊': 'a poll'} %}
+      {% set icon = m[:1] %}
+      {% set rest = m[1:] | regex_replace('^\ufe0f?\\s*', '') | regex_replace('\\s*\\(\\d+:\\d\\d\\)$', '') %}
       {% if r | length > 0 %}
       {% set e = r[0][0] | regex_replace('[\ufe0f\U0001F3FB-\U0001F3FF]', '') %}
       {% set names = {'❤': 'a heart', '👍': 'a thumbs up', '😂': 'a laugh', '😮': 'a wow',
@@ -675,6 +683,13 @@
                       '😘': 'a kiss', '🔥': 'fire', '🎉': 'a party popper', '💯': 'a hundred', '🥲': 'a teary smile'} %}
       {% set target = r[0][1] | trim | regex_replace('(?s)^"(.*)"$', '\\1') %}
       Caitlin reacted to {{ target }} with {{ names.get(e, e) }}
+      {%- elif not icon | regex_match('[\\w\\s]') and rest | regex_match('(?i)^sent an? \\w') -%}
+      Caitlin sent {{ rest[5:] }}
+      {%- elif icon in media -%}
+      {% set caption = rest | regex_replace('(?i)^poll:\\s*', '') %}
+      {% if icon == '📄' %}{% set caption = caption | regex_replace('\\.[A-Za-z0-9]{2,4}$', '') %}{% endif %}
+      {% set bare = caption | regex_match('(?i)^(photo|video|voice message|audio|document|location|live location|contact|gif|sticker|poll)?$') %}
+      Caitlin sent {{ media[icon] }}{{ '' if bare else ': ' ~ caption }}
       {%- else -%}
       Caitlin says: {{ m }}
       {%- endif %}
