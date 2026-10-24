@@ -667,8 +667,10 @@
     # Attachments arrive as '<icon> Sent a photo', '<icon> Photo' or
     # '<icon> <caption>'. TTS reads the icon aloud ("camera sent a photo"), so
     # drop it: 'Caitlin sent a photo', plus ': <caption>' when there is one.
+    # The phone's TTS reads a capitalised "No" as the abbreviation ("number"),
+    # so lowercase it unless a number actually follows (No. 5).
     speech: >-
-      {% set m = msg | string | trim %}
+      {% set m = msg | string | trim | regex_replace('\\b(No|NO)\\b(?!\\.?\\s*\\d)', 'no') %}
       {% set r = m | regex_findall('(?s)^Reacted (\\S+) to (.+)$') %}
       {% set media = {'📷': 'a photo', '🎥': 'a video', '📹': 'a video', '🎤': 'a voice message',
                       '🎙': 'a voice message', '🎵': 'an audio file', '📄': 'a document', '📍': 'a location',
